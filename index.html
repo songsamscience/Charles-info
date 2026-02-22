@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>샤를의 법칙: 온도와 부피의 관계</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        /* Keyframes for particle movement */
+        @keyframes particle-move-1 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(6px, -4px); }
+            100% { transform: translate(-3px, 5px); }
+        }
+        @keyframes particle-move-2 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-5px, 7px); }
+            100% { transform: translate(4px, -2px); }
+        }
+        @keyframes particle-move-3 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(8px, 3px); }
+            100% { transform: translate(-6px, -4px); }
+        }
+        @keyframes particle-move-4 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-7px, -5px); }
+            100% { transform: translate(3px, 6px); }
+        }
+        @keyframes particle-move-5 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(4px, 8px); }
+            100% { transform: translate(-4px, -8px); }
+        }
+        @keyframes particle-move-6 {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-8px, 2px); }
+            100% { transform: translate(6px, -4px); }
+        }
+
+        /* Particle base style */
+        .particle {
+            position: absolute;
+            width: 8px; 
+            height: 8px;
+            background-color: #3B82F6; /* Blue-500 */
+            border-radius: 50%;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            animation-direction: alternate;
+        }
+
+        /* Low Temperature Particles */
+        .low-temp-particles .particle:nth-child(1) { animation: particle-move-1 5s infinite alternate linear; left: 10%; top: 70%; }
+        .low-temp-particles .particle:nth-child(2) { animation: particle-move-2 5.2s infinite alternate linear; left: 30%; top: 85%; }
+        .low-temp-particles .particle:nth-child(3) { animation: particle-move-3 4.8s infinite alternate linear; left: 50%; top: 60%; }
+        .low-temp-particles .particle:nth-child(4) { animation: particle-move-4 5.5s infinite alternate linear; left: 70%; top: 75%; }
+        .low-temp-particles .particle:nth-child(5) { animation: particle-move-5 5.1s infinite alternate linear; left: 20%; top: 65%; }
+        .low-temp-particles .particle:nth-child(6) { animation: particle-move-6 4.9s infinite alternate linear; left: 80%; top: 80%; }
+        .low-temp-particles .particle:nth-child(7) { animation: particle-move-1 5.3s infinite alternate linear; left: 40%; top: 78%; }
+        .low-temp-particles .particle:nth-child(8) { animation: particle-move-2 4.7s infinite alternate linear; left: 60%; top: 68%; }
+
+        /* High Temperature Particles: Increased speed */
+        .high-temp-particles .particle:nth-child(1) { animation: particle-move-1 0.6s infinite alternate linear; left: 15%; top: 30%; }
+        .high-temp-particles .particle:nth-child(2) { animation: particle-move-2 0.7s infinite alternate linear; left: 70%; top: 20%; }
+        .high-temp-particles .particle:nth-child(3) { animation: particle-move-3 0.5s infinite alternate linear; left: 40%; top: 10%; }
+        .high-temp-particles .particle:nth-child(4) { animation: particle-move-4 0.8s infinite alternate linear; left: 25%; top: 60%; }
+        .high-temp-particles .particle:nth-child(5) { animation: particle-move-5 0.65s infinite alternate linear; left: 80%; top: 50%; }
+        .high-temp-particles .particle:nth-child(6) { animation: particle-move-6 0.55s infinite alternate linear; left: 50%; top: 40%; }
+        .high-temp-particles .particle:nth-child(7) { animation: particle-move-1 0.75s infinite alternate linear; left: 60%; top: 80%; }
+        .high-temp-particles .particle:nth-child(8) { animation: particle-move-2 0.5s infinite alternate linear; left: 35%; top: 75%; }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 space-y-8">
+        
+        <header class="text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">샤를의 법칙 (Charles's Law)</h1>
+            <p class="mt-2 text-lg text-gray-600">온도가 변하면 기체의 부피는 어떻게 될까요?</p>
+        </header>
+
+        <section class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3">샤를의 법칙이란?</h2>
+            <p class="text-gray-700 leading-relaxed">
+                압력이 일정할 때, 일정량의 기체의 부피(V)는 절대온도(T)에 비례한다는 법칙입니다. 즉, 온도가 높아지면 기체의 부피는 늘어나고, 온도가 낮아지면 부피는 줄어듭니다. 이 관계는 수학적으로 다음과 같이 표현할 수 있습니다.
+            </p>
+            <div class="mt-4 text-center bg-white p-3 rounded-md shadow-sm">
+                <span class="text-xl font-mono text-blue-700">V / T = k (일정)</span>
+            </div>
+        </section>
+
+        <!-- NEW: Additional Info Section -->
+        <section class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">섭씨온도와 부피의 관계 💡</h3>
+            <p class="text-gray-700 leading-relaxed">
+                샤를의 법칙에 따르면, 압력이 일정할 때 기체의 부피는 온도가 1℃ 올라갈 때마다 <strong>0℃일 때 부피의 약 1/273</strong>만큼씩 일정하게 증가합니다. 이를 통해 부피와 섭씨온도 사이의 관계를 다음과 같은 식으로 나타낼 수 있습니다.
+            </p>
+            <div class="mt-4 text-center bg-white p-3 rounded-md shadow-sm">
+                <span class="text-xl font-mono text-green-700">V<sub>t</sub> = V₀ (1 + t / 273)</span>
+            </div>
+            <p class="mt-3 text-sm text-gray-600">
+                (<strong>V<sub>t</sub></strong>: 섭씨 t℃에서의 부피, <strong>V₀</strong>: 0℃에서의 부피)
+            </p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도와 부피의 관계 시각화</h2>
+            <div class="flex flex-col md:flex-row justify-around items-stretch gap-8">
+                
+                <div class="text-center w-full md:w-1/2 p-6 bg-blue-50 rounded-lg border-2 border-blue-200 flex flex-col">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">온도가 높아질 때 (High Temperature)</h3>
+                    <div class="flex-grow flex flex-col justify-center items-center">
+                        <div class="relative w-32 h-48 sm:w-40 sm:h-56 mx-auto bg-white border-4 border-gray-400 rounded-b-lg overflow-hidden">
+                            <div class="absolute top-0 left-0 right-0 h-16 bg-gray-300 flex flex-col items-center justify-start p-1 pt-2" style="transform: translateY(10px);">
+                                <div class="w-10 h-3 bg-gray-500 rounded-sm mb-1"></div>
+                                <div class="w-10 h-3 bg-gray-500 rounded-sm"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-40 high-temp-particles">
+                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-lg text-gray-700 font-medium">기체 입자들이 활발하게 움직여<br> <span class="font-bold text-blue-600">부피가 커집니다.</span></p>
+                </div>
+                
+                <div class="text-center w-full md:w-1/2 p-6 bg-blue-50 rounded-lg border-2 border-blue-200 flex flex-col">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">온도가 낮아질 때 (Low Temperature)</h3>
+                    <div class="flex-grow flex flex-col justify-center items-center">
+                        <div class="relative w-32 h-48 sm:w-40 sm:h-56 mx-auto bg-white border-4 border-gray-400 rounded-b-lg overflow-hidden">
+                            <div class="absolute top-0 left-0 right-0 h-16 bg-gray-300 flex flex-col items-center justify-start p-1 pt-2" style="transform: translateY(110px);">
+                                <div class="w-10 h-3 bg-gray-500 rounded-sm mb-1"></div>
+                                <div class="w-10 h-3 bg-gray-500 rounded-sm"></div>
+                            </div>
+                            <div class="absolute inset-x-0 bottom-0 h-24 low-temp-particles">
+                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-lg text-gray-700 font-medium">기체 입자들이 둔하게 움직여<br> <span class="font-bold text-blue-600">부피가 작아집니다.</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도에 따른 부피 변화</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
+                
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-blue-500 mb-2">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">0 °C</span></p>
+                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">15 L</span></p>
+                </div>
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">273 °C</span></p>
+                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">30 L</span></p>
+                </div>
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">546 °C</span></p>
+                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">45 L</span></p>
+                </div>
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">819 °C</span></p>
+                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">60 L</span></p>
+                </div>
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">1092 °C</span></p>
+                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">75 L</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도-부피 관계 그래프</h2>
+            <div class="bg-white p-4 rounded-lg shadow-inner border border-gray-200">
+                <canvas id="charlesLawChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-8 border-t border-gray-200 pt-6">
+            <p>ⓒ 2025. 송쌤과학 All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('charlesLawChart').getContext('2d');
+
+            const tempData = [0, 273, 546, 819, 1092];
+            const volumeData = [15, 30, 45, 60, 75];
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: tempData,
+                    datasets: [{
+                        label: '부피 (Volume)',
+                        data: volumeData,
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                        borderWidth: 3,
+                        pointBackgroundColor: 'rgb(59, 130, 246)', 
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '섭씨온도 (Temperature, °C)',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#4B5563'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '부피 (Volume, L)',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#4B5563'
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1F2937',
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            callbacks: {
+                                title: (context) => `온도: ${context[0].label} °C`,
+                                label: (context) => `부피: ${context.raw} L`
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

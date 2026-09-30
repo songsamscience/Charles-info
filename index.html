@@ -1,298 +1,1037 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>샤를의 법칙: 온도와 부피의 관계</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        /* Keyframes for particle movement */
-        @keyframes particle-move-1 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(6px, -4px); }
-            100% { transform: translate(-3px, 5px); }
-        }
-        @keyframes particle-move-2 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-5px, 7px); }
-            100% { transform: translate(4px, -2px); }
-        }
-        @keyframes particle-move-3 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(8px, 3px); }
-            100% { transform: translate(-6px, -4px); }
-        }
-        @keyframes particle-move-4 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-7px, -5px); }
-            100% { transform: translate(3px, 6px); }
-        }
-        @keyframes particle-move-5 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(4px, 8px); }
-            100% { transform: translate(-4px, -8px); }
-        }
-        @keyframes particle-move-6 {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-8px, 2px); }
-            100% { transform: translate(6px, -4px); }
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="version" content="2.0">
+<meta name="description" content="끝을 막은 주사기를 온도가 다른 물에 넣어 피스톤이 움직이는 모습과 부피를 재고, 확대한 입자 모형에서 온도가 높아지면 입자가 빨라져 부피가 커지는 까닭을 찾는 중학교 과학 가상실험실">
+<meta property="og:title" content="송쌤과학 가상실험실 | 샤를 법칙 — 기체의 온도와 부피">
+<meta property="og:description" content="주사기를 뜨거운 물에 넣으면 피스톤은 어떻게 될까요? 부피를 재고 입자 모형으로 확인해요">
+<meta property="og:type" content="website">
+<meta name="theme-color" id="metaTheme" content="#101b28">
+<title>송쌤과학 가상실험실 | 샤를 법칙 — 기체의 온도와 부피</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23101b28'/%3E%3Cpath%20d='M14%2026v26a4%204%200%200%200%204%204h28a4%204%200%200%200%204-4V26'%20fill='none'%20stroke='%23b0c0cf'%20stroke-width='3'/%3E%3Cpath%20d='M16%2038h32v14a3%203%200%200%201-3%203H19a3%203%200%200%201-3-3Z'%20fill='%23ff9d6e'/%3E%3Crect%20x='27'%20y='10'%20width='10'%20height='38'%20rx='2'%20fill='none'%20stroke='%23e8eff5'%20stroke-width='2.5'/%3E%3Crect%20x='28'%20y='22'%20width='8'%20height='4'%20fill='%2323282e'/%3E%3Cpath%20d='M32%2022V6'%20stroke='%23e8eff5'%20stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<script>(function(){try{var t=localStorage.getItem('ssv-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}})();</script>
+<style>
+/* ═══════ 송쌤과학 중1 가상실험실 공통 껍데기 (체험버전 V2.11) ═══════
+   ① 테마와 무관한 토큰 → ② 테마 토큰(두 블록, 같은 목록) → ③ 마감 기본층 → ④ 껍데기 부품
+   실험실마다 달라지는 장면 토큰·배치는 각 실험실 src/app.css에 둔다. */
+:root{
+  --font-ui:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-title:var(--font-ui);
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-10:40px;
+  --r-1:6px;--r-2:10px;--r-3:16px;--r-full:999px;        /* 작은 컨트롤 6 · 버튼·입력 10 · 패널·장면 16 · 상태 알약 full */
+  --control-h:36px;--icon-size:18px;
+  --dur-fast:140ms;--dur-ui:260ms;--dur-ui-out:180ms;--dur-layout:360ms;
+  --ease-out:cubic-bezier(.2,0,0,1);--ease-in:cubic-bezier(.4,0,1,1);--lift:8px;
+  --top-h:56px;--strip-h:0px;
+  --light-angle:215deg;                                   /* 주 광원: 왼쪽 위 — UI 그림자는 오른쪽 아래로 */
+  --brand-pink:#FFB7B2;--brand-ink:#3b1d1b;
+  --yt-red:#ff0033;--yt-play:#ffffff;--ig-1:#feda75;--ig-2:#fa7e1e;--ig-3:#d62976;--ig-4:#4f5bd5;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --surface-0:#0b131d;--surface-1:#101b28;--surface-2:#182636;
+  --stage:#0e1a27;--stage-2:#132233;
+  --text-1:#e8eff5;--text-2:#b0c0cf;--text-3:#8ea2b4;--line-1:#223445;--line-2:#34495d;
+  --accent:#6fd3c1;--accent-strong:#9be7d9;--accent-soft:#163a3b;--on-accent:#08131c;--focus:#9be7d9;--scrim:#02070dcc;
+  --danger:#ff9d8a;--danger-soft:#3b2322;--ok:#7ed7a0;--ok-soft:#1d3b32;--warn:#ffcf5c;--warn-soft:#3f3822;
+  --data-1:#E69F00;--data-2:#56B4E9;--data-3:#2fbf92;--data-4:#CC79A7;
+  --shadow-color:215 45% 3%;
+  --shadow-1:0 0 #0000;
+  --shadow-2:0 12px 32px -12px hsl(var(--shadow-color) / .6);
+  --shadow-3:0 24px 64px -16px hsl(var(--shadow-color) / .7);
+  --edge-hi:inset 0 1px 0 hsl(0 0% 100% / .06);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --surface-0:#edf1f4;--surface-1:#fbfcfd;--surface-2:#e3eaf0;
+  --stage:#f5f8fa;--stage-2:#e9eff4;
+  --text-1:#132a3b;--text-2:#44596b;--text-3:#566b7e;--line-1:#d3dde5;--line-2:#b2c3d0;
+  --accent:#0f6b60;--accent-strong:#0a5148;--accent-soft:#d5eeea;--on-accent:#ffffff;--focus:#0a5148;--scrim:#0b1a2680;
+  --danger:#b3261e;--danger-soft:#fbe3df;--ok:#1d7a47;--ok-soft:#d8f0e2;--warn:#8a5a00;--warn-soft:#fff2c8;
+  --data-1:#B07400;--data-2:#0072B2;--data-3:#007A5A;--data-4:#A6508A;
+  --shadow-color:210 30% 22%;
+  --shadow-1:0 1px 2px hsl(var(--shadow-color) / .08);
+  --shadow-2:0 1px 2px hsl(var(--shadow-color) / .06),0 10px 28px -10px hsl(var(--shadow-color) / .22);
+  --shadow-3:0 2px 6px hsl(var(--shadow-color) / .08),0 24px 56px -16px hsl(var(--shadow-color) / .30);
+  --edge-hi:0 0 #0000;
+}
+/* ③ 마감 기본층 (§6.8) */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;accent-color:var(--accent)}
+body{margin:0;background:var(--surface-0);color:var(--text-1);font:400 15px/1.65 var(--font-ui);font-synthesis:none;word-break:keep-all;overflow-wrap:break-word}
+:root[data-theme="dark"] body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4{text-wrap:balance;margin:0}
+p,li,figcaption{text-wrap:pretty}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{font-size:max(16px,1em)}
+button,a,[role="button"]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+::selection{background:color-mix(in oklab,var(--accent) 30%,transparent)}
+input,textarea{caret-color:var(--accent)}
+*{scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.scroll{overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.num{font-variant-numeric:tabular-nums}
+.unit{white-space:nowrap}
+img,canvas,video{display:block;max-width:100%}
+[hidden]{display:none!important}
+dialog:not([open]){display:none}
+[popover]:not(:popover-open){display:none}
+.sr-only{position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:8px;top:-60px;z-index:90;padding:8px 12px;border-radius:var(--r-1);background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:600}
+.skip:focus{top:8px}
+kbd{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid var(--line-2);border-bottom-width:2px;border-radius:5px;padding:3px 5px;color:var(--text-1);background:var(--surface-0)}
+svg.ic{width:var(--icon-size);height:var(--icon-size);fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.muted{color:var(--text-2)}
+/* ⑤ 사용자 설정 존중 */
+@media (prefers-reduced-motion:reduce){:root{--lift:0px}}
+@media (prefers-contrast:more){:root[data-theme]{--line-1:var(--line-2);--text-3:var(--text-2)}}
+@media (prefers-reduced-transparency:reduce){.glass{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surface-1)!important}}
 
-        /* Particle base style */
-        .particle {
-            position: absolute;
-            width: 8px; 
-            height: 8px;
-            background-color: #3B82F6; /* Blue-500 */
-            border-radius: 50%;
-            animation-iteration-count: infinite;
-            animation-timing-function: linear;
-            animation-direction: alternate;
-        }
+/* ═══ 몸체: 상단 막대 / 본문 / (휴대폰) 브랜드 띠 ═══ */
+html,body{height:100%}
+body{height:100dvh;display:grid;grid-template-rows:var(--top-h) minmax(0,1fr) var(--strip-h);overflow:hidden}
+.topbar{position:relative;z-index:30;display:flex;align-items:center;gap:12px;padding:0 10px 0 16px;background:var(--surface-1);border-bottom:1px solid var(--line-1);min-width:0}
+.brand{display:flex;align-items:center;gap:8px;white-space:nowrap;flex:none}
+.brandmark{width:27px;height:27px;border-radius:var(--r-2);background:var(--brand-pink);color:var(--brand-ink);display:grid;place-items:center;flex:none}
+.brandmark svg.ic{width:17px;height:17px;stroke-width:2}
+.word{font:700 13px/1 var(--font-ui);color:var(--text-1)}
+.vdiv{width:1px;height:15px;background:var(--line-2);flex:none}
+.social{position:relative;width:34px;height:34px;display:grid;place-items:center;border-radius:var(--r-1);color:var(--text-2);text-decoration:none;flex:none}
+.social::before{content:'';position:absolute;inset:-5px}
+.social svg{width:21px;height:21px}
+.social .yt-body{fill:currentColor}.social .yt-play{fill:var(--surface-1)}
+.social .ig-line{fill:none;stroke:currentColor;stroke-width:2}.social .ig-dot{fill:currentColor}
+.social:is(:hover,:focus-visible) .yt-body{fill:var(--yt-red)}.social:is(:hover,:focus-visible) .yt-play{fill:var(--yt-play)}
+.social:is(:hover,:focus-visible) .ig-line{stroke:url(#ig-grad)}.social:is(:hover,:focus-visible) .ig-dot{fill:var(--ig-3)}
+.top-title{display:flex;align-items:baseline;gap:10px;min-width:0;flex:1 1 auto}
+.top-title h1{font:700 15px/1.2 var(--font-ui);color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.top-title .std{font:500 12px/1 var(--font-ui);color:var(--text-2);white-space:nowrap}
+.utilities{margin-left:auto;display:flex;align-items:center;gap:2px;flex:none}
+.hsep{width:1px;height:20px;background:var(--line-1);margin:0 4px}
+.icon-btn{position:relative;width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:var(--r-2);background:transparent;color:var(--text-2);cursor:pointer;transition:background var(--dur-fast),color var(--dur-fast),transform var(--dur-fast)}
+.icon-btn::before{content:'';position:absolute;inset:-4px}
+.icon-btn svg.ic{width:20px;height:20px}
+.icon-btn:active{transform:scale(.94)}
+@media (hover:hover) and (pointer:fine){.icon-btn:hover,.social:hover{background:var(--surface-2);color:var(--text-1)}}
+main.app{position:relative;min-width:0;min-height:0;overflow:hidden;outline:none}
 
-        /* Low Temperature Particles */
-        .low-temp-particles .particle:nth-child(1) { animation: particle-move-1 5s infinite alternate linear; left: 10%; top: 70%; }
-        .low-temp-particles .particle:nth-child(2) { animation: particle-move-2 5.2s infinite alternate linear; left: 30%; top: 85%; }
-        .low-temp-particles .particle:nth-child(3) { animation: particle-move-3 4.8s infinite alternate linear; left: 50%; top: 60%; }
-        .low-temp-particles .particle:nth-child(4) { animation: particle-move-4 5.5s infinite alternate linear; left: 70%; top: 75%; }
-        .low-temp-particles .particle:nth-child(5) { animation: particle-move-5 5.1s infinite alternate linear; left: 20%; top: 65%; }
-        .low-temp-particles .particle:nth-child(6) { animation: particle-move-6 4.9s infinite alternate linear; left: 80%; top: 80%; }
-        .low-temp-particles .particle:nth-child(7) { animation: particle-move-1 5.3s infinite alternate linear; left: 40%; top: 78%; }
-        .low-temp-particles .particle:nth-child(8) { animation: particle-move-2 4.7s infinite alternate linear; left: 60%; top: 68%; }
+/* ═══ 버튼 계층: Primary / Secondary / Ghost / Icon ═══ */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--control-h);padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r-2);background:var(--surface-1);color:var(--text-1);font:600 13px/1.2 var(--font-ui);cursor:pointer;white-space:nowrap;transition:background var(--dur-fast),border-color var(--dur-fast),transform var(--dur-fast)}
+.btn::before{content:'';position:absolute;inset:-4px 0}
+.btn svg.ic{width:17px;height:17px}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--text-2)}
+.btn.small{min-height:32px;padding:0 10px;font-size:13px}
+.btn.wide{width:100%}
+.btn[aria-disabled="true"],.btn:disabled{opacity:.5;cursor:not-allowed}
+@media (hover:hover) and (pointer:fine){
+  .btn:not(.primary):not(:disabled):hover{background:var(--surface-2)}
+  .btn.primary:not(:disabled):hover{background:var(--accent-strong);border-color:var(--accent-strong)}
+  .btn.ghost:hover{color:var(--text-1)}
+}
+/* 칩 · 세그먼트 */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 11px;border:1px solid var(--line-2);border-radius:var(--r-full);background:transparent;color:var(--text-1);font:500 13px/1 var(--font-ui);cursor:pointer;white-space:nowrap}
+.chip::before{content:'';position:absolute;inset:-6px -2px}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--text-1);font-weight:700}
+.chip[aria-pressed="true"]::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);order:-1}
+.seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;padding:3px;border-radius:var(--r-2);background:var(--surface-2);border:1px solid var(--line-1)}
+.seg button{position:relative;min-height:30px;padding:0 12px;border:0;border-radius:7px;background:transparent;color:var(--text-2);font:600 13px/1.2 var(--font-ui);cursor:pointer;white-space:nowrap}
+.seg button::before{content:'';position:absolute;inset:-6px -1px}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--surface-1);color:var(--text-1);font-weight:800;box-shadow:var(--edge-hi),0 1px 2px hsl(var(--shadow-color) / .18)}
+@media (hover:hover) and (pointer:fine){.chip:hover{border-color:var(--text-2)}.seg button:not([aria-pressed="true"]):not([aria-selected="true"]):hover{color:var(--text-1)}}
 
-        /* High Temperature Particles: Increased speed */
-        .high-temp-particles .particle:nth-child(1) { animation: particle-move-1 0.6s infinite alternate linear; left: 15%; top: 30%; }
-        .high-temp-particles .particle:nth-child(2) { animation: particle-move-2 0.7s infinite alternate linear; left: 70%; top: 20%; }
-        .high-temp-particles .particle:nth-child(3) { animation: particle-move-3 0.5s infinite alternate linear; left: 40%; top: 10%; }
-        .high-temp-particles .particle:nth-child(4) { animation: particle-move-4 0.8s infinite alternate linear; left: 25%; top: 60%; }
-        .high-temp-particles .particle:nth-child(5) { animation: particle-move-5 0.65s infinite alternate linear; left: 80%; top: 50%; }
-        .high-temp-particles .particle:nth-child(6) { animation: particle-move-6 0.55s infinite alternate linear; left: 50%; top: 40%; }
-        .high-temp-particles .particle:nth-child(7) { animation: particle-move-1 0.75s infinite alternate linear; left: 60%; top: 80%; }
-        .high-temp-particles .particle:nth-child(8) { animation: particle-move-2 0.5s infinite alternate linear; left: 35%; top: 75%; }
-    </style>
+/* 결과 저장 — 장면 모서리의 카메라 (Ghost/Icon 계층) */
+.save-btn{position:relative;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 11px 0 9px;border:1px solid var(--line-2);border-radius:var(--r-2);background:color-mix(in oklab,var(--surface-1) 88%,transparent);color:var(--text-1);font:600 13px/1 var(--font-ui);cursor:pointer;white-space:nowrap;box-shadow:var(--edge-hi)}
+.save-btn::before{content:'';position:absolute;inset:-5px}
+.save-btn svg.ic{width:18px;height:18px}
+.save-btn[aria-busy="true"]{opacity:.6;cursor:progress}
+@media (hover:hover) and (pointer:fine){.save-btn:hover{background:var(--surface-2)}}
+.shutter{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;animation:shutter .32s var(--ease-out);z-index:5;border-radius:inherit}
+@keyframes shutter{0%{opacity:.55}100%{opacity:0}}
+
+/* 판독값 — 라벨 · 큰 수 · 작은 단위 */
+.readout{display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
+.readout .v{font:800 26px/1.05 var(--font-ui);letter-spacing:-.02em;color:var(--text-1)}
+.readout .u{font:600 13px/1 var(--font-ui);color:var(--text-2)}
+.lbl{font:600 12px/1.4 var(--font-ui);color:var(--text-2)}
+
+/* 슬라이더 (네이티브 range + accent-color, 트랙 4px 이상 · 터치 44px) */
+input[type="range"]{width:100%;height:44px;margin:0;background:transparent;cursor:pointer;touch-action:pan-y}
+
+/* ═══ 대화상자 · 드로어 · 토스트 ═══ */
+dialog{border:0;padding:0;color:var(--text-1);background:var(--surface-1)}
+dialog::backdrop{background:var(--scrim)}
+.modal{width:min(620px,calc(100vw - 32px));max-height:min(86dvh,760px);border-radius:var(--r-3);box-shadow:var(--edge-hi),var(--shadow-3)}
+.modal[open]{display:flex;flex-direction:column}
+.modal.narrow{width:min(420px,calc(100vw - 32px))}
+.drawer{margin:0 0 0 auto;height:100dvh;max-height:100dvh;width:clamp(360px,32vw,460px);border-left:1px solid var(--line-1);box-shadow:var(--shadow-3)}
+.drawer[open]{display:flex;flex-direction:column}
+.drawer::backdrop{background:color-mix(in oklab,var(--scrim) 55%,transparent)}
+.dialog-head{display:flex;align-items:center;gap:8px;padding:12px 10px 12px 20px;border-bottom:1px solid var(--line-1);flex:none}
+.dialog-head h2{font:800 18px/1.3 var(--font-ui);margin-right:auto}
+.dialog-body{padding:16px 20px 22px;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+:is(dialog,[popover]).sheet{opacity:0;transform:translateY(var(--lift));transition:opacity var(--dur-ui-out) var(--ease-in),transform var(--dur-ui-out) var(--ease-in),overlay var(--dur-ui-out) allow-discrete,display var(--dur-ui-out) allow-discrete}
+:is(dialog[open],[popover]:popover-open).sheet{opacity:1;transform:none;transition-duration:var(--dur-ui);transition-timing-function:var(--ease-out)}
+@starting-style{:is(dialog[open],[popover]:popover-open).sheet{opacity:0;transform:translateY(var(--lift))}}
+.drawer.sheet{transform:translateX(24px)}
+.drawer.sheet[open]{transform:none}
+@starting-style{.drawer.sheet[open]{transform:translateX(24px)}}
+@media (prefers-reduced-motion:reduce){.drawer.sheet,.drawer.sheet[open]{transform:none}}
+.help-doc h3{font:700 15px/1.4 var(--font-ui);margin:18px 0 6px;color:var(--text-1)}
+.help-doc h3:first-child{margin-top:0}
+.help-doc p,.help-doc li{font-size:15px;line-height:1.7;color:var(--text-1)}
+.help-doc ul,.help-doc ol{margin:0;padding-left:20px}
+.help-doc li+li{margin-top:4px}
+.help-doc .keys{line-height:2.2}
+.brandblock{margin-top:16px;padding:12px 14px;border-radius:var(--r-2);background:var(--surface-2);font-size:13px;line-height:1.8;color:var(--text-1)}
+.brandblock a{color:var(--text-1)}
+.ver-line{margin-top:10px;font:500 12px/1 var(--font-ui);color:var(--text-2)}
+/* 원리 카드 */
+.tcard{padding:0 0 18px;border-bottom:1px solid var(--line-1);margin-bottom:18px}
+.tcard:last-child{border-bottom:0;margin-bottom:0}
+.tcard h3{font:800 18px/1.35 var(--font-ui);margin:0 0 8px}
+.tcard figure{margin:0 0 10px;border-radius:var(--r-2);background:var(--stage);border:1px solid var(--line-1);overflow:hidden}
+.tcard figure svg{display:block;width:100%;height:auto}
+.tcard .def{font:700 15px/1.6 var(--font-ui);margin-bottom:6px}
+.tcard p{font-size:15px;line-height:1.7;color:var(--text-1)}
+.tcard p+p{margin-top:6px}
+.tcard .link{margin-top:10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-1) var(--r-1) 0;font-size:15px;line-height:1.65}
+.toast{position:fixed;left:50%;bottom:calc(20px + var(--strip-h) + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;max-width:min(360px,calc(100vw - 24px));padding:10px 14px;border-radius:var(--r-2);background:var(--surface-1);border:1px solid var(--line-2);box-shadow:var(--edge-hi),var(--shadow-2);font:500 13px/1.5 var(--font-ui);color:var(--text-1)}
+.toast.error{border-color:var(--danger)}
+.toast .toast-x{flex:none;width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:var(--r-1);background:transparent;color:var(--text-2);cursor:pointer}
+.textlink{display:inline-flex;align-items:center;gap:6px;color:var(--text-1);font:600 13px/1 var(--font-ui);text-decoration:underline;text-underline-offset:3px;padding:10px 0}
+.textlink .yt-ic{width:20px;height:20px;stroke:none}
+.textlink .yt-ic .yt-body{fill:var(--yt-red)}.textlink .yt-ic .yt-play{fill:#fff}
+
+/* ═══ 휴대폰 세로(≤600px): 브랜드·채널은 아래 브랜드 띠로, 위에는 제목 + 고정 세트 ═══ */
+@media (max-width:600px){
+  :root{--top-h:52px;--strip-h:40px}
+  .topbar{padding:0 4px 0 12px;gap:6px}
+  .topbar>.vdiv{display:none}
+  .top-title .std{display:none}
+  .top-title h1{font-size:15px}
+  .brand{position:fixed;left:0;right:0;bottom:0;z-index:30;height:calc(var(--strip-h) + env(safe-area-inset-bottom));padding:0 12px env(safe-area-inset-bottom);background:var(--surface-1);border-top:1px solid var(--line-1);justify-content:flex-start}
+  .brand .social{width:44px;height:36px}
+  .brand .social svg{width:18px;height:18px}
+  .utilities .hsep{margin:0 2px}
+  .icon-btn{width:40px;height:40px}
+  .drawer{width:100vw;height:86dvh;margin:auto 0 0;border-left:0;border-top:1px solid var(--line-1);border-radius:var(--r-3) var(--r-3) 0 0}
+  .drawer.sheet{transform:translateY(24px)}
+  @starting-style{.drawer.sheet[open]{transform:translateY(24px)}}
+}
+@media (max-width:360px){.icon-btn{width:38px}.utilities{gap:0}}
+
+/* ═══════ 이 실험실 ═══════ */
+/* 샤를 법칙 — 왼쪽 조건·계기·기록 칸 │ 오른쪽 작업대 장면(비커 넷 + 옮겨 가는 주사기 + 입자 모형) */
+:root[data-theme="dark"]{
+  --glass-hi:#e9f4fb;--glass:#9fc3d826;--glass-lo:#6d8ea3;--glass-edge:#8fb0c4;--grad-ink:#dbe6ef;
+  --rub-hi:#5b636d;--rub:#23282e;--cap-rub:#c0392b;--rod-hi:#e3e8ee;--rod-lo:#8d98a5;
+  --water:#3aa6e0;--water-top:#8fd4f7;--ice:#e8f6ff;--beaker:#bfe6f533;--beaker-edge:#9cc8dc;
+  --therm:#e8eff5;--therm-liq:#ff5d73;--bench:#1d2632;--bench-edge:#2f3b4c;--stand:#56606b;
+  --box:#122033;--box-edge:#5a7892;--pt-hi:#d6ebff;--pt:#7ab8ff;--streak:#7ab8ff;--call:#6f879e;--sel:#6fd3c1;
+}
+:root[data-theme="light"]{
+  --glass-hi:#ffffff;--glass:#cfe4f180;--glass-lo:#8fb3c9;--glass-edge:#6f93aa;--grad-ink:#23313d;
+  --rub-hi:#6b737c;--rub:#2c3137;--cap-rub:#b3261e;--rod-hi:#f4f7fa;--rod-lo:#8a99a6;
+  --water:#2e95d3;--water-top:#9fdcfa;--ice:#f4fbff;--beaker:#e3f3fa80;--beaker-edge:#3a8aa3;
+  --therm:#ffffff;--therm-liq:#c8243a;--bench:#dde4ea;--bench-edge:#b2c3d0;--stand:#6f7a87;
+  --box:#f2f7fb;--box-edge:#7d90a2;--pt-hi:#8cc1ff;--pt:#1f6fd1;--streak:#1f6fd1;--call:#8a9cad;--sel:#0f6b60;
+}
+.lab{height:100%;display:grid;grid-template-columns:400px minmax(0,1fr)}
+.panel{min-height:0;display:flex;flex-direction:column;background:var(--surface-1);border-right:1px solid var(--line-1)}
+.pscroll{flex:1;min-height:0;padding:14px 18px 18px;display:flex;flex-direction:column;gap:16px}
+.stage-wrap{position:relative;min-height:0;background:var(--stage)}
+.stage{position:absolute;inset:0}
+#scene{position:absolute;inset:0;width:100%;height:100%;user-select:none;-webkit-user-select:none}
+.stage-tools{position:absolute;top:12px;right:12px;z-index:3}
+
+/* 장면 */
+.bench{fill:var(--bench)}.bench-edge{fill:var(--bench-edge)}
+.stand{fill:var(--stand)}
+.rail{fill:url(#rodGrad);stroke:var(--rod-lo);stroke-width:.5}
+.glass-hi-s{stop-color:var(--glass-hi)}.glass-s{stop-color:var(--glass)}.glass-lo-s{stop-color:var(--glass-lo)}
+.barrel{fill:url(#barrelGrad);stroke:var(--glass-edge);stroke-width:.7}
+.flange{fill:var(--glass-lo);stroke:var(--glass-edge);stroke-width:.5;opacity:.9}
+.gas{fill:#7ab8ff22}
+.grad{stroke:var(--grad-ink);stroke-width:.35}.grad.mid{stroke-width:.45}.grad.maj{stroke-width:.6}
+.grad-t{fill:var(--grad-ink);font-size:var(--t12);font-weight:600;text-anchor:end;dominant-baseline:central;font-variant-numeric:tabular-nums}
+.rub-hi-s{stop-color:var(--rub-hi)}.rub-s{stop-color:var(--rub)}.rod-hi-s{stop-color:var(--rod-hi)}.rod-lo-s{stop-color:var(--rod-lo)}
+.rubber{fill:url(#rubberGrad)}.caprub{fill:var(--cap-rub)}
+.rod{fill:var(--rod-hi);stroke:var(--rod-lo);stroke-width:.5}
+.clamp{fill:var(--stand);stroke:var(--rod-lo);stroke-width:.5}
+.beaker{fill:var(--beaker);stroke:var(--beaker-edge);stroke-width:1}
+.water{fill:var(--water);opacity:.42}
+.water-top{stroke:var(--water-top);stroke-width:1.1}
+.ice{fill:var(--ice);opacity:.8;stroke:var(--beaker-edge);stroke-width:.5}
+.b-mark{stroke:var(--beaker-edge);stroke-width:.5}
+.therm{fill:var(--therm);stroke:var(--glass-edge);stroke-width:.5}
+.therm-liq{fill:var(--therm-liq)}
+.b-lbl{fill:var(--text-1);font-size:var(--t12);font-weight:700;text-anchor:middle}
+.b-hit{fill:transparent;cursor:pointer}
+.b-sel{fill:none;stroke:var(--sel);stroke-width:1.4;stroke-dasharray:3 2}
+.box{fill:var(--box);stroke:var(--box-edge);stroke-width:.8}
+.pt-hi-s{stop-color:var(--pt-hi)}.pt-s{stop-color:var(--pt)}
+.pt{fill:url(#ptGrad)}
+.streak{stroke:var(--streak);stroke-width:1.6;stroke-linecap:round;opacity:.35}
+.call{stroke:var(--call);stroke-width:.6;stroke-dasharray:2 2;fill:none}
+.cap-s{fill:var(--text-2);font-size:var(--t12);font-weight:500}
+.cap-s.mid{text-anchor:middle}
+.cap-short{display:none}.small .cap-short{display:inline}.small .cap-long{display:none}
+.vol-t.mid{text-anchor:middle}
+.vol-t{fill:var(--text-1);font-size:var(--t13);font-weight:800;paint-order:stroke;stroke:var(--stage);stroke-width:var(--h3,3px);stroke-linejoin:round;font-variant-numeric:tabular-nums}
+
+/* 칸 */
+.cap{font:700 15px/1.3 var(--font-ui);color:var(--text-1);margin-bottom:8px}
+.pred{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--r-2);background:var(--surface-2);border:1px solid var(--line-1)}
+.pred:empty{display:none}
+.pred .q{font:600 15px/1.45 var(--font-ui);color:var(--text-1)}
+.pred .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pred .res{font:500 15px/1.5 var(--font-ui)}
+.pred .res b{font-weight:800}
+.wchips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.wchips button{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:52px;padding:6px 4px;border:1px solid var(--line-2);border-radius:var(--r-2);background:transparent;color:var(--text-1);font:600 12px/1.25 var(--font-ui);cursor:pointer;text-align:center}
+.wchips button b{font:800 15px/1 var(--font-ui);font-variant-numeric:tabular-nums}
+.wchips button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.wchips button[aria-disabled="true"]{opacity:.55;cursor:progress}
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.meters .m{display:flex;flex-direction:column;gap:2px;padding:4px 0}
+.meters .m+.m{padding-left:16px;border-left:1px solid var(--line-1)}
+.meters .m.wide{grid-column:1 / -1;padding-left:0;border-left:0;border-top:1px solid var(--line-1);padding-top:8px;margin-top:6px}
+.meters .readout .v{font-size:30px}
+.lbl-note{font-weight:500;margin-left:4px}
+.speed{display:flex;align-items:center;gap:10px}
+.speed .bar{flex:1;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.speed .bar i{display:block;height:100%;width:0;background:var(--pt);transition:width .25s var(--ease-out)}
+.sv{font:800 15px/1 var(--font-ui);color:var(--text-1);min-width:40px;text-align:right}
+.recw{display:flex;align-items:center;gap:12px}
+.recw .btn{min-height:46px;font-size:15px;min-width:150px}
+.rhint{font:500 13px/1.4 var(--font-ui);color:var(--text-2)}
+.g-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#graph{width:100%;height:auto}
+.g-grid{stroke:var(--line-1);stroke-width:1}.g-axis{stroke:var(--line-2);stroke-width:1.2}
+.g-t{fill:var(--text-2);font:500 12px var(--font-ui);font-variant-numeric:tabular-nums}
+.g-title{fill:var(--text-1);font:600 12px var(--font-ui)}
+.g-pt{fill:var(--data-1);stroke:var(--surface-1);stroke-width:1.5}
+.g-fit{stroke:var(--data-1);stroke-width:1.6;stroke-dasharray:6 4}
+.g-now{fill:none;stroke:var(--text-1);stroke-width:1.4;stroke-dasharray:2 2}
+.find{font:500 15px/1.55 var(--font-ui);color:var(--text-1);min-height:24px;margin:4px 0 8px}
+table.rec{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.rec th{font:600 12px/1.3 var(--font-ui);color:var(--text-2);text-align:right;padding:6px 10px;border-bottom:1px solid var(--line-2)}
+table.rec td{font:500 15px/1.3 var(--font-ui);color:var(--text-1);text-align:right;padding:7px 10px;border-bottom:1px solid var(--line-1)}
+table.rec tr.fresh td{animation:fresh .9s var(--ease-out)}
+@keyframes fresh{0%{background:var(--accent-soft)}100%{background:transparent}}
+.empty-row td{color:var(--text-2)!important;font-size:13px!important;text-align:left!important}
+
+@media (max-width:1040px){.lab{grid-template-columns:340px minmax(0,1fr)}.wchips{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  main.app{overflow:auto}
+  .lab{height:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto}
+  .stage-wrap{grid-row:1;position:sticky;top:0;z-index:4;aspect-ratio:520/300;border-bottom:1px solid var(--line-1)}
+  .panel{grid-row:2;border-right:0}
+  .pscroll{overflow:visible}
+  .wchips{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .save-btn{width:44px;height:44px;padding:0;justify-content:center}.save-btn .save-l{display:none}
+  .stage-tools{top:4px;right:4px}
+  .pscroll{padding:12px}
+  .wchips button{font-size:11px;min-height:48px}
+  .recw{flex-direction:column;align-items:stretch}
+}
+
+</style>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
-    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 space-y-8">
-        
-        <header class="text-center">
-            <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">샤를의 법칙 (Charles's Law)</h1>
-            <p class="mt-2 text-lg text-gray-600">온도가 변하면 기체의 부피는 어떻게 될까요?</p>
-        </header>
-
-        <section class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-3">샤를의 법칙이란?</h2>
-            <p class="text-gray-700 leading-relaxed">
-                압력이 일정할 때, 일정량의 기체의 부피(V)는 절대온도(T)에 비례한다는 법칙입니다. 즉, 온도가 높아지면 기체의 부피는 늘어나고, 온도가 낮아지면 부피는 줄어듭니다. 이 관계는 수학적으로 다음과 같이 표현할 수 있습니다.
-            </p>
-            <div class="mt-4 text-center bg-white p-3 rounded-md shadow-sm">
-                <span class="text-xl font-mono text-blue-700">V / T = k (일정)</span>
-            </div>
-        </section>
-
-        <!-- NEW: Additional Info Section -->
-        <section class="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">섭씨온도와 부피의 관계 💡</h3>
-            <p class="text-gray-700 leading-relaxed">
-                샤를의 법칙에 따르면, 압력이 일정할 때 기체의 부피는 온도가 1℃ 올라갈 때마다 <strong>0℃일 때 부피의 약 1/273</strong>만큼씩 일정하게 증가합니다. 이를 통해 부피와 섭씨온도 사이의 관계를 다음과 같은 식으로 나타낼 수 있습니다.
-            </p>
-            <div class="mt-4 text-center bg-white p-3 rounded-md shadow-sm">
-                <span class="text-xl font-mono text-green-700">V<sub>t</sub> = V₀ (1 + t / 273)</span>
-            </div>
-            <p class="mt-3 text-sm text-gray-600">
-                (<strong>V<sub>t</sub></strong>: 섭씨 t℃에서의 부피, <strong>V₀</strong>: 0℃에서의 부피)
-            </p>
-        </section>
-
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도와 부피의 관계 시각화</h2>
-            <div class="flex flex-col md:flex-row justify-around items-stretch gap-8">
-                
-                <div class="text-center w-full md:w-1/2 p-6 bg-blue-50 rounded-lg border-2 border-blue-200 flex flex-col">
-                    <h3 class="text-xl font-bold text-blue-700 mb-4">온도가 높아질 때 (High Temperature)</h3>
-                    <div class="flex-grow flex flex-col justify-center items-center">
-                        <div class="relative w-32 h-48 sm:w-40 sm:h-56 mx-auto bg-white border-4 border-gray-400 rounded-b-lg overflow-hidden">
-                            <div class="absolute top-0 left-0 right-0 h-16 bg-gray-300 flex flex-col items-center justify-start p-1 pt-2" style="transform: translateY(10px);">
-                                <div class="w-10 h-3 bg-gray-500 rounded-sm mb-1"></div>
-                                <div class="w-10 h-3 bg-gray-500 rounded-sm"></div>
-                            </div>
-                            <div class="absolute inset-x-0 bottom-0 h-40 high-temp-particles">
-                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
-                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-lg text-gray-700 font-medium">기체 입자들이 활발하게 움직여<br> <span class="font-bold text-blue-600">부피가 커집니다.</span></p>
-                </div>
-                
-                <div class="text-center w-full md:w-1/2 p-6 bg-blue-50 rounded-lg border-2 border-blue-200 flex flex-col">
-                    <h3 class="text-xl font-bold text-blue-700 mb-4">온도가 낮아질 때 (Low Temperature)</h3>
-                    <div class="flex-grow flex flex-col justify-center items-center">
-                        <div class="relative w-32 h-48 sm:w-40 sm:h-56 mx-auto bg-white border-4 border-gray-400 rounded-b-lg overflow-hidden">
-                            <div class="absolute top-0 left-0 right-0 h-16 bg-gray-300 flex flex-col items-center justify-start p-1 pt-2" style="transform: translateY(110px);">
-                                <div class="w-10 h-3 bg-gray-500 rounded-sm mb-1"></div>
-                                <div class="w-10 h-3 bg-gray-500 rounded-sm"></div>
-                            </div>
-                            <div class="absolute inset-x-0 bottom-0 h-24 low-temp-particles">
-                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
-                                <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-lg text-gray-700 font-medium">기체 입자들이 둔하게 움직여<br> <span class="font-bold text-blue-600">부피가 작아집니다.</span></p>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도에 따른 부피 변화</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
-                
-                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="text-blue-500 mb-2">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">0 °C</span></p>
-                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">15 L</span></p>
-                </div>
-                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="text-blue-500 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">273 °C</span></p>
-                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">30 L</span></p>
-                </div>
-                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="text-blue-500 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">546 °C</span></p>
-                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">45 L</span></p>
-                </div>
-                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="text-blue-500 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">819 °C</span></p>
-                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">60 L</span></p>
-                </div>
-                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <div class="text-blue-500 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-gray-700">온도: <span class="text-blue-600 text-lg">1092 °C</span></p>
-                    <p class="font-bold text-gray-700">부피: <span class="text-blue-600 text-lg">75 L</span></p>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">온도-부피 관계 그래프</h2>
-            <div class="bg-white p-4 rounded-lg shadow-inner border border-gray-200">
-                <canvas id="charlesLawChart"></canvas>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-500 text-sm mt-8 border-t border-gray-200 pt-6">
-            <p>ⓒ 2025. 송쌤과학 All rights reserved.</p>
-        </footer>
-
+<body data-lab="charles-lab">
+<a class="skip" href="#main">실험 화면으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="ig-grad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color:var(--ig-1)"/><stop offset=".35" style="stop-color:var(--ig-2)"/><stop offset=".65" style="stop-color:var(--ig-3)"/><stop offset="1" style="stop-color:var(--ig-4)"/></linearGradient></defs></svg>
+<header class="topbar">
+  <div class="brand">
+    <span class="brandmark" id="brandIc" aria-hidden="true"></span>
+    <span class="word">송쌤과학</span>
+    <span class="vdiv" aria-hidden="true"></span>
+    <a class="social" id="yt" href="https://www.youtube.com/@songsamscience" target="_blank" rel="noopener noreferrer" aria-label="송쌤과학 유튜브 채널 (새 창)" title="YouTube @songsamscience (새 창)"></a>
+    <a class="social" id="ig" href="https://www.instagram.com/songsamscience/" target="_blank" rel="noopener noreferrer" aria-label="송쌤과학 인스타그램 (새 창)" title="Instagram @songsamscience (새 창)"></a>
+  </div>
+  <span class="vdiv" aria-hidden="true"></span>
+  <div class="top-title"><h1>샤를 법칙 — 기체의 온도와 부피</h1><span class="std">중1 · 기체의 성질</span></div>
+  <div class="utilities">
+    <button class="icon-btn" id="bookBtn" aria-label="원리 카드 열기" title="원리 카드"></button>
+    <button class="icon-btn" id="helpBtn" aria-label="도움말 (H)" title="도움말 (H)"></button>
+    <span class="hsep" aria-hidden="true"></span>
+    <button class="icon-btn" id="fullBtn" aria-label="전체화면 (F)" title="전체화면 (F)"></button>
+    <button class="icon-btn" id="themeBtn" aria-label="라이트 모드로 전환 (D)" title="라이트 모드로 전환 (D)"></button>
+  </div>
+</header>
+<main class="app" id="main" tabindex="-1">
+<div class="lab" id="lab">
+  <section class="panel" aria-label="조건·측정·기록">
+    <div class="pscroll scroll" id="pScroll">
+      <div class="pred" id="pred"></div>
+      <div class="blk">
+        <h3 class="cap" id="lWater">주사기를 넣을 물</h3>
+        <div class="wchips" id="wChips" role="group" aria-labelledby="lWater"></div>
+      </div>
+      <div class="meters" aria-live="polite">
+        <div class="m"><span class="lbl">물 온도 <span class="lbl-note">온도계</span></span><span class="readout"><span class="v num" id="tV">20</span><span class="u">℃</span></span></div>
+        <div class="m"><span class="lbl">기체의 부피 <span class="lbl-note">주사기 눈금</span></span><span class="readout"><span class="v num" id="vV">21.5</span><span class="u">mL</span></span></div>
+        <div class="m wide"><span class="lbl">입자의 빠르기 <span class="lbl-note">입자 모형 · 0 ℃일 때를 1로</span></span><span class="speed"><span class="bar" aria-hidden="true"><i id="spBar"></i></span><span class="num sv" id="spV">1.04</span></span></div>
+      </div>
+      <div class="recw"><button class="btn primary" id="recBtn"></button><p class="rhint" id="rHint"></p></div>
+      <div class="blk">
+        <div class="g-head"><h3 class="cap">온도와 부피 그래프</h3><button class="btn small ghost" id="undoBtn"></button></div>
+        <svg id="graph" viewBox="0 0 360 240" role="img" aria-label="물 온도와 기체 부피의 그래프"></svg>
+        <p class="find note-slot" id="find"></p>
+        <table class="rec"><thead><tr><th scope="col">물 온도 (℃)</th><th scope="col">기체의 부피 (mL)</th></tr></thead><tbody id="recBody"></tbody></table>
+      </div>
     </div>
+  </section>
+  <section class="stage-wrap" aria-labelledby="stageCap">
+    <h2 class="sr-only" id="stageCap">실험 장면 — 온도가 다른 물이 담긴 비커 네 개와 끝을 막은 주사기, 확대한 입자 모형</h2>
+    <div class="stage" id="stage">
+      <svg id="scene" viewBox="0 6 520 300" role="group" aria-label="비커를 누르면 주사기를 그 물에 넣어요">
+        <defs>
+          <linearGradient id="barrelGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="glass-lo-s"/><stop offset=".22" class="glass-hi-s"/><stop offset=".5" class="glass-s"/><stop offset="1" class="glass-lo-s"/></linearGradient>
+          <linearGradient id="rubberGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="rub-hi-s"/><stop offset="1" class="rub-s"/></linearGradient>
+          <linearGradient id="rodGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="rod-hi-s"/><stop offset="1" class="rod-lo-s"/></linearGradient>
+          <radialGradient id="ptGrad" cx=".35" cy=".35" r=".7"><stop offset="0" class="pt-hi-s"/><stop offset="1" class="pt-s"/></radialGradient>
+          <clipPath id="beakerClip0"><rect x="0" y="0" width="1" height="1"/></clipPath>
+        </defs>
+        <g id="gRail"></g><g id="gBeakBack"></g><g id="gSyr"></g><g id="gBeakFront"></g><g id="gCall"></g><g id="gBox"></g><g id="gParts"></g><g id="gTags"></g>
+      </svg>
+    </div>
+    <div class="stage-tools"><button class="save-btn" id="saveBtn" aria-label="실험 결과를 PNG 이미지로 저장 (C)" title="실험 결과를 PNG 이미지로 저장 (C)"></button></div>
+  </section>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('charlesLawChart').getContext('2d');
+</main>
+<div class="strip-space" aria-hidden="true"></div>
+<dialog id="modal" class="modal sheet" aria-labelledby="modalTitle">
+  <header class="dialog-head"><h2 id="modalTitle"></h2><button class="icon-btn" data-close aria-label="닫기 (Esc)" title="닫기 (Esc)"></button></header>
+  <div class="dialog-body" id="modalBody"></div>
+</dialog>
+<dialog id="drawer" class="drawer sheet" aria-labelledby="drawerTitle">
+  <header class="dialog-head"><h2 id="drawerTitle">원리 카드</h2><button class="btn small ghost" id="dHelp">도움말</button><button class="icon-btn" data-close aria-label="닫기 (Esc)" title="닫기 (Esc)"></button></header>
+  <div class="dialog-body" id="drawerBody"></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="sr-only" id="live" aria-live="polite"></div>
+<script>
+/* ═══════ 송쌤과학 중1 가상실험실 공통 껍데기 — 테마 · 전체화면 · 도움말 · 원리 카드 · 결과 저장 · 단축키 ═══════
+   각 실험실은 SS.init({...})을 한 번 부른다. 채널 주소는 이 파일의 CHANNELS 한 곳에서만 정의한다. */
+const SS = (() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const NS = 'http://www.w3.org/2000/svg';
+  const CHANNELS = { yt: 'https://www.youtube.com/@songsamscience', ig: 'https://www.instagram.com/songsamscience/' };
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ICONS = {
+    flask: '<path d="M9 3h6m-5 0v6L4.5 19A2 2 0 0 0 6.3 22h11.4a2 2 0 0 0 1.8-3L14 9V3M7.5 15h9"/>',
+    book: '<path d="M12 6.6C10.4 5.1 7.9 4.5 3.5 4.5v14c4.4 0 6.9.6 8.5 2.1 1.6-1.5 4.1-2.1 8.5-2.1v-14c-4.4 0-6.9.6-8.5 2.1Z"/><path d="M12 6.6v14"/>',
+    help: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.3c-.7.4-1.2 1-1.2 1.8v.5"/><path d="M12 17.2h.01"/>',
+    fsIn: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+    fsOut: '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>',
+    moon: '<path d="M20 14.6A8.2 8.2 0 1 1 9.4 4a6.6 6.6 0 0 0 10.6 10.6Z"/>',
+    sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
+    camera: '<path d="M3.5 8.5h3.2l1.8-3h7l1.8 3h3.2v11h-17Z"/><circle cx="12" cy="13.5" r="3.6"/>',
+    x: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    chev: '<path d="m9.5 6 6 6-6 6"/>',
+    chevL: '<path d="m14.5 6-6 6 6 6"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    minus: '<path d="M5 12h14"/>',
+    trash: '<path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13"/>',
+    reset: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/>',
+    undo: '<path d="M9 8H5V4"/><path d="M5.3 8A8 8 0 1 1 5 15"/>',
+    play: '<path d="M7.5 5.5v13l11-6.5Z"/>',
+    pause: '<path d="M8 5.5v13M16 5.5v13"/>',
+    pen: '<path d="M4.5 19.5h4l10-10-4-4-10 10Z"/><path d="m13 7 4 4"/>',
+    push: '<path d="M3.5 12h11"/><path d="m10.5 7 5 5-5 5"/><path d="M19.5 4.5v15"/>',
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.6"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>',
+    ghost: '<circle cx="14" cy="11" r="7"/><circle cx="9.5" cy="13.5" r="5.2" stroke-dasharray="2.4 2.2"/>',
+    record: '<path d="M5 4.5h10.5l3.5 3.5v11.5H5Z"/><path d="M8.5 11h7M8.5 14.5h7M8.5 7.5h4"/>',
+    compare: '<path d="M12 3.5v17"/><rect x="3.5" y="6.5" width="6" height="11" rx="1.5"/><rect x="14.5" y="6.5" width="6" height="11" rx="1.5"/>',
+    yt: '<path class="yt-body" d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4a2.6 2.6 0 0 0-1.8 1.8A27 27 0 0 0 2 12a27 27 0 0 0 .4 4.8 2.6 2.6 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.8A27 27 0 0 0 22 12a27 27 0 0 0-.4-4.8Z"/><path class="yt-play" d="M10 15.3V8.7l5.6 3.3Z"/>',
+    ig: '<rect class="ig-line" x="3" y="3" width="18" height="18" rx="5.2"/><circle class="ig-line" cx="12" cy="12" r="4.1"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.2"/>',
+  };
+  const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICONS[name] || ''}</svg>`;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-            const tempData = [0, 273, 546, 819, 1092];
-            const volumeData = [15, 30, 45, 60, 75];
+  let CFG = null;
+  const themeHooks = [];
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: tempData,
-                    datasets: [{
-                        label: '부피 (Volume)',
-                        data: volumeData,
-                        borderColor: 'rgb(59, 130, 246)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)', 
-                        borderWidth: 3,
-                        pointBackgroundColor: 'rgb(59, 130, 246)', 
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        tension: 0,
-                        fill: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: '섭씨온도 (Temperature, °C)',
-                                font: {
-                                    size: 16,
-                                    weight: 'bold'
-                                },
-                                color: '#4B5563'
-                            },
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '부피 (Volume, L)',
-                                font: {
-                                    size: 16,
-                                    weight: 'bold'
-                                },
-                                color: '#4B5563'
-                            },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2937',
-                            titleFont: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            bodyFont: {
-                                size: 12
-                            },
-                            callbacks: {
-                                title: (context) => `온도: ${context[0].label} °C`,
-                                label: (context) => `부피: ${context.raw} L`
-                            }
-                        }
-                    }
-                }
-            });
+  /* ── 저장: 진행 상태는 sessionStorage, 테마·익명 최고 기록만 localStorage ── */
+  const KEY = n => `ssv-${CFG.id}-${n}`;
+  const store = {
+    get(n, d) { try { const v = sessionStorage.getItem(KEY(n)); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(n, v) { try { sessionStorage.setItem(KEY(n), JSON.stringify(v)); } catch (e) { } },
+    del(n) { try { sessionStorage.removeItem(KEY(n)); } catch (e) { } },
+    clear() { try { Object.keys(sessionStorage).filter(k => k.startsWith(`ssv-${CFG.id}-`)).forEach(k => sessionStorage.removeItem(k)); } catch (e) { } },
+  };
+
+  /* ── 알림 ── */
+  function announce(m) { const l = $('#live'); if (!l) return; l.textContent = ''; requestAnimationFrame(() => { l.textContent = m; }); }
+  let toastT = 0, toastLast = '', toastN = 1;
+  function toast(msg, o = {}) {
+    const e = $('#toast');
+    if (msg === toastLast && !e.hidden) toastN++; else toastN = 1;
+    toastLast = msg;
+    e.innerHTML = `<span>${esc(msg)}${toastN > 1 ? ` <b class="num">×${toastN}</b>` : ''}</span>${o.error ? `<button class="toast-x" aria-label="알림 닫기">${icon('x')}</button>` : ''}`;
+    e.classList.toggle('error', !!o.error);
+    e.hidden = false;
+    const x = e.querySelector('.toast-x'); if (x) x.onclick = () => { e.hidden = true; };
+    clearTimeout(toastT);
+    toastT = setTimeout(() => { e.hidden = true; }, o.error ? 7000 : 2800);
+  }
+
+  /* ── 테마 (§11 — 스위치는 html[data-theme] 하나) ── */
+  function applyTheme(t) {
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem('ssv-theme', t); } catch (e) { }
+    const next = t === 'dark' ? '라이트' : '다크', b = $('#themeBtn');
+    b.setAttribute('aria-label', `${next} 모드로 전환 (D)`); b.setAttribute('title', `${next} 모드로 전환 (D)`);
+    b.innerHTML = icon(t === 'dark' ? 'moon' : 'sun');
+    const mt = $('#metaTheme'); if (mt) mt.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--surface-1').trim());
+    themeHooks.forEach(f => f(t));
+  }
+  const toggleTheme = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+  /* ── 전체화면 ── */
+  function toggleFull() {
+    const d = document;
+    if (d.fullscreenElement) { d.exitFullscreen && d.exitFullscreen(); return; }
+    const r = d.documentElement;
+    if (!r.requestFullscreen || d.fullscreenEnabled === false) { toast('이 브라우저에서는 전체화면을 지원하지 않습니다', { error: true }); return; }
+    r.requestFullscreen().catch(() => toast('전체화면으로 바꾸지 못했어요. 다시 눌러 보세요.', { error: true }));
+  }
+  function syncFull() {
+    const on = !!document.fullscreenElement, b = $('#fullBtn');
+    document.body.classList.toggle('fs', on);
+    b.innerHTML = icon(on ? 'fsOut' : 'fsIn');
+    const l = on ? '전체화면 나가기 (F · Esc)' : '전체화면 (F)';
+    b.setAttribute('aria-label', l); b.setAttribute('title', l);
+  }
+
+  /* ── 대화상자 (네이티브 <dialog>) ── */
+  let lastTrigger = null;
+  function openModal(title, html, o = {}) {
+    const d = $('#modal');
+    if (d.open) d.close();
+    lastTrigger = document.activeElement;
+    d.classList.toggle('narrow', !!o.narrow);
+    $('#modalTitle').textContent = title;
+    $('#modalBody').innerHTML = html;
+    d.showModal();
+    if (o.onOpen) o.onOpen(d);
+    $('#modalBody').scrollTop = 0;
+  }
+  function openDrawer() {
+    const d = $('#drawer');
+    lastTrigger = document.activeElement;
+    $('#drawerBody').innerHTML = CFG.theory();
+    d.showModal();
+    $('#drawerBody').scrollTop = 0;
+    if (CFG.onTheoryOpen) CFG.onTheoryOpen($('#drawerBody'));
+  }
+  function openHelp() {
+    const h = CFG.help;
+    openModal('도움말', `<div class="help-doc">
+      <h3>이렇게 해 보세요</h3>${h.how}
+      <h3>단축키</h3><p class="keys"><kbd>F</kbd> 전체화면 · <kbd>D</kbd> 다크/라이트 · <kbd>H</kbd> 도움말 · <kbd>C</kbd> 결과 저장 · <kbd>Esc</kbd> 창 닫기·전체화면 나가기${h.keys ? '<br>' + h.keys : ''}</p>
+      <h3>결과 저장</h3><p>장면 오른쪽 위 <b>결과 저장</b>(또는 <kbd>C</kbd>)을 누르면 지금 보이는 장면과 그 순간의 조건·값이 담긴 PNG 한 장이 기기의 다운로드 폴더에 저장돼요(iPad는 저장 확인 창이 떠요).</p>
+      <h3>모형의 조건과 한계</h3>${h.model}
+      <h3>출처와 제작</h3>${h.source}
+      <h3>기록 지우기</h3><p>실험 기록과 진행 상태는 이 탭에만 남고, 탭을 닫으면 지워져요.${h.local ? ' ' + h.local : ''}</p>
+      <button class="btn" id="wipeBtn">${icon('trash')}이 실험실의 기록 모두 지우기</button>
+      <div class="brandblock">🧪 송쌤과학 (Song Ssaem Science)<br>ⓒ 2026 송세호 | 아주중학교<br>📺 YouTube: <a href="${CHANNELS.yt}" target="_blank" rel="noopener noreferrer" aria-label="송쌤과학 유튜브 채널 (새 창)">@songsamscience</a>&nbsp; 📷 Instagram: <a href="${CHANNELS.ig}" target="_blank" rel="noopener noreferrer" aria-label="송쌤과학 인스타그램 (새 창)">@songsamscience</a><br>⚠ 무단 복제·상업적 이용 금지</div>
+      <p class="ver-line">v${CFG.version} · ${CFG.date}</p></div>`, {
+      onOpen: () => {
+        $('#wipeBtn').onclick = () => openModal('기록을 모두 지울까요?', `<p>${h.wipe || '이 실험실의 기록과 진행 상태'}가 모두 지워져요. 테마 설정은 남아요.</p>
+          <div class="dialog-actions"><button class="btn" data-close>그대로 두기</button><button class="btn primary" id="wipeYes">모두 지우기</button></div>`, {
+          narrow: true, onOpen: () => {
+            $('#wipeYes').onclick = () => {
+              store.clear();
+              if (CFG.onWipe) CFG.onWipe();
+              $('#modal').close(); toast('기록을 모두 지웠어요.');
+            };
+          },
         });
-    </script>
+      },
+    });
+  }
+
+  /* ── 결과 저장 (§11): SVG 장면 복제 → 계산된 스타일 인라인 → 이미지 → 캔버스 + 정보 띠 → PNG ── */
+  const INLINE_PROPS = ['fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'opacity', 'font-family', 'font-size', 'font-weight', 'font-style', 'text-anchor', 'dominant-baseline', 'paint-order', 'stop-color', 'stop-opacity', 'display', 'visibility', 'letter-spacing', 'font-variant-numeric', 'mix-blend-mode', 'filter', 'clip-path', 'mask', 'transform', 'transform-origin', 'transform-box'];
+  function inlineTree(src, dst) {
+    if (src.nodeType !== 1) return;
+    const cs = getComputedStyle(src);
+    let st = '';
+    for (const p of INLINE_PROPS) {
+      const v = cs.getPropertyValue(p);
+      if (p === 'transform' && (v === 'none' || !src.style.transform)) continue;   // CSS transform만 옮긴다(속성 transform은 그대로 있음)
+      if ((p === 'transform-origin' || p === 'transform-box') && !src.style.transform) continue;
+      if (v !== '' && v !== 'normal' && v !== 'none' || p === 'fill' || p === 'stroke' || (p === 'display' && v === 'none')) st += `${p}:${v};`;   // 숨긴 요소는 PNG에서도 숨긴다
+    }
+    dst.setAttribute('style', st); dst.removeAttribute('class');
+    const a = src.children, b = dst.children;
+    for (let i = 0; i < a.length && i < b.length; i++) inlineTree(a[i], b[i]);
+  }
+  function svgToImage(svg, outW, vbOverride) {
+    const clone = svg.cloneNode(true);
+    inlineTree(svg, clone);
+    clone.querySelectorAll('[data-noexport]').forEach(e => e.remove());
+    clone.querySelectorAll('[tabindex]').forEach(e => e.removeAttribute('tabindex'));
+    const vb = vbOverride || svg.viewBox.baseVal;
+    const outH = Math.round(outW * vb.height / vb.width);
+    clone.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.width} ${vb.height}`);
+    clone.setAttribute('width', outW); clone.setAttribute('height', outH); clone.setAttribute('xmlns', NS);
+    clone.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    const data = new XMLSerializer().serializeToString(clone);
+    const url = URL.createObjectURL(new Blob([data], { type: 'image/svg+xml;charset=utf-8' }));
+    return new Promise((ok, no) => { const img = new Image(); img.onload = () => { URL.revokeObjectURL(url); ok({ img, w: outW, h: outH }); }; img.onerror = e => { URL.revokeObjectURL(url); no(e); }; img.src = url; });
+  }
+  function wrapText(ctx, text, maxW) {
+    const words = String(text).split(' '), lines = []; let line = '';
+    for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+    if (line) lines.push(line);
+    return lines;
+  }
+  const p2 = n => String(n).padStart(2, '0');
+  async function capture() {
+    const btn = $('#saveBtn');
+    if (!btn || btn.offsetParent === null || btn.getAttribute('aria-busy') === 'true') return;
+    const cap = CFG.capture && CFG.capture();
+    if (!cap || !cap.svg) return;
+    btn.setAttribute('aria-busy', 'true');
+    const slow = setTimeout(() => toast('결과 이미지를 만드는 중이에요…'), 700);
+    try {
+      const css = getComputedStyle(document.documentElement), tok = n => css.getPropertyValue(n).trim();
+      const svg = cap.svg, vb = cap.viewBox || svg.viewBox.baseVal;
+      const r = svg.getBoundingClientRect(), fit = Math.min(r.width / svg.viewBox.baseVal.width, r.height / svg.viewBox.baseVal.height);
+      const outW = Math.round(Math.min(2400, Math.max(1200, vb.width * fit * 2)));
+      const g = await svgToImage(svg, outW, cap.viewBox);
+      const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+      const k = outW / 1200, pad = 28 * k, font = n => `${n}px 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif`;
+      ctx.font = `500 ${font(17 * k)}`;
+      const rightW = 300 * k, textW = outW - pad * 3 - rightW;
+      const condL = wrapText(ctx, cap.cond, textW), stateL = wrapText(ctx, cap.state, textW);
+      const bandH = pad * 2 + 50 * k + (condL.length + stateL.length) * 26 * k;
+      cv.width = outW; cv.height = Math.round(g.h + bandH);
+      ctx.fillStyle = tok(cap.bg || '--stage'); ctx.fillRect(0, 0, outW, g.h);
+      ctx.drawImage(g.img, 0, 0, g.w, g.h);
+      ctx.fillStyle = tok('--surface-1'); ctx.fillRect(0, g.h, outW, cv.height - g.h);
+      ctx.fillStyle = tok('--line-2'); ctx.fillRect(0, g.h, outW, Math.max(1, k));
+      let y = g.h + pad + 14 * k;
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = tok('--text-2'); ctx.font = `600 ${font(14 * k)}`; ctx.fillText('실험 결과 · 송쌤과학 가상실험실', pad, y);
+      y += 30 * k; ctx.fillStyle = tok('--text-1'); ctx.font = `800 ${font(22 * k)}`; ctx.fillText(cap.title || CFG.title, pad, y);
+      ctx.font = `500 ${font(17 * k)}`; ctx.fillStyle = tok('--text-1');
+      for (const l of condL) { y += 26 * k; ctx.fillText(l, pad, y); }
+      ctx.fillStyle = tok('--text-2');
+      for (const l of stateL) { y += 26 * k; ctx.fillText(l, pad, y); }
+      const now = new Date();
+      ctx.textAlign = 'right'; let ry = g.h + pad + 30 * k; const rx = outW - pad;
+      ctx.fillStyle = tok('--text-2'); ctx.font = `500 ${font(15 * k)}`;
+      ctx.fillText(`${now.getFullYear()}-${p2(now.getMonth() + 1)}-${p2(now.getDate())} ${p2(now.getHours())}:${p2(now.getMinutes())}`, rx, ry); ry += 26 * k;
+      ctx.fillText('© 송쌤과학 · @songsamscience', rx, ry);
+      ctx.textAlign = 'left';
+      const blob = await new Promise(ok => cv.toBlob(ok, 'image/png'));
+      if (!blob) throw new Error('blob');
+      const fname = `${CFG.file}_실험결과_${now.getFullYear()}${p2(now.getMonth() + 1)}${p2(now.getDate())}-${p2(now.getHours())}${p2(now.getMinutes())}.png`.replace(/[\\/:*?"<>|\s]/g, '');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      window.__lastCapture = { name: fname, w: cv.width, h: cv.height, url: cv.toDataURL('image/png') };
+      if (!REDUCED && cap.flashEl) { const f = document.createElement('div'); f.className = 'shutter'; cap.flashEl.appendChild(f); setTimeout(() => f.remove(), 340); }
+      toast(`실험 결과를 PNG로 저장했어요 — ${fname}`);
+    } catch (e) {
+      console.error(e);
+      toast('이미지로 저장하지 못했어요. 기기의 화면 캡처를 이용해 주세요.', { error: true });
+    } finally { clearTimeout(slow); btn.removeAttribute('aria-busy'); }
+  }
+
+  /* ── 애니메이션 루프: rAF + 델타 타임, 탭이 숨으면 멈춤 ── */
+  function loop(step) {
+    let last = 0, id = 0, on = true;
+    const f = t => { if (!on) return; const dt = last ? Math.min(0.05, (t - last) / 1000) : 0; last = t; step(dt); id = requestAnimationFrame(f); };
+    const vis = () => { if (document.hidden) { cancelAnimationFrame(id); last = 0; } else if (on) { last = 0; id = requestAnimationFrame(f); } };
+    document.addEventListener('visibilitychange', vis);
+    id = requestAnimationFrame(f);
+    return { stop() { on = false; cancelAnimationFrame(id); document.removeEventListener('visibilitychange', vis); } };
+  }
+
+  /* ── SVG 작은 도구 ── */
+  function el(tag, attrs = {}, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  /* 화면 좌표 → SVG 좌표 */
+  function svgPoint(svg, x, y) { const p = svg.createSVGPoint(); p.x = x; p.y = y; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+
+  /* ── 초기화 ── */
+  function init(cfg) {
+    CFG = cfg;
+    $('#brandIc').innerHTML = icon('flask');
+    $('#yt').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.yt}</svg>`;
+    $('#ig').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.ig}</svg>`;
+    $('#yt').href = CHANNELS.yt; $('#ig').href = CHANNELS.ig;
+    $('#bookBtn').innerHTML = icon('book');
+    $('#helpBtn').innerHTML = icon('help');
+    $$('[data-close]').forEach(b => { if (!b.innerHTML.trim()) b.innerHTML = icon('x'); });
+    const sb = $('#saveBtn'); if (sb) sb.innerHTML = `${icon('camera')}<span class="save-l">결과 저장</span>`;
+    applyTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    syncFull();
+    document.addEventListener('fullscreenchange', () => { syncFull(); if (CFG.onResize) requestAnimationFrame(CFG.onResize); });
+    $('#themeBtn').addEventListener('click', toggleTheme);
+    $('#fullBtn').addEventListener('click', toggleFull);
+    $('#helpBtn').addEventListener('click', openHelp);
+    $('#bookBtn').addEventListener('click', openDrawer);
+    if (sb) sb.addEventListener('click', capture);
+    $('#dHelp').addEventListener('click', () => { $('#drawer').close(); openHelp(); });
+    document.addEventListener('click', e => {
+      const c = e.target.closest('[data-close]'); if (c) { const d = c.closest('dialog'); if (d) d.close(); }
+    });
+    ['modal', 'drawer'].forEach(id => {
+      const d = $('#' + id);
+      d.addEventListener('close', () => { if (lastTrigger && document.contains(lastTrigger)) lastTrigger.focus({ preventScroll: true }); });
+      d.addEventListener('click', e => { if (e.target === d) d.close(); });   // 스크림(바깥) 누르면 닫기
+    });
+    document.addEventListener('keydown', e => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target;
+      if (t.closest && t.closest('input:not([type="range"]),textarea,select,[contenteditable="true"]')) return;
+      const k = e.key.toLowerCase();
+      const inDialog = $('#modal').open || $('#drawer').open;
+      if (k === 'f') { e.preventDefault(); toggleFull(); }
+      else if (k === 'd') { e.preventDefault(); toggleTheme(); }
+      else if (k === 'h') { e.preventDefault(); if ($('#modal').open) $('#modal').close(); else openHelp(); }
+      else if (k === 'c' && !inDialog) { e.preventDefault(); capture(); }
+      else if (CFG.onKey && !inDialog) CFG.onKey(e);
+    });
+    let rz = 0;
+    addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => CFG.onResize && CFG.onResize()); });
+  }
+
+  return { $, $$, NS, CHANNELS, REDUCED, ICONS, icon, esc, store, announce, toast, applyTheme, toggleTheme, openModal, openHelp, openDrawer, capture, loop, el, svgPoint, init, onTheme: f => themeHooks.push(f) };
+})();
+
+/* ═══════ 이 실험실 ═══════ */
+/* ═══════ 기체 입자 모형 엔진 (보일·샤를 공용) ═══════
+   확대 모형 상자 안의 같은 크기·같은 질량 원판 입자. 벽·피스톤과 탄성 충돌, 입자끼리 탄성 충돌.
+   - 입자 수는 늘 같다(닫힌 용기). 입자 크기도 늘 같다.
+   - 온도 = 입자 빠르기: uniform이면 같은 온도에서 모든 입자가 같은 빠르기로 움직인다(교과서 입자 모형).
+     입자끼리 부딪혀 방향이 바뀌어도 빠르기는 그 온도의 값으로 되돌린다. 온도가 바뀌면 모든 입자가 함께 빨라지거나 느려진다.
+   - 피스톤 벽에 부딪힌 횟수를 기록해 최근 2초 평균(초당)을 낸다.
+   상자 좌표: x 0..W, y 0..H. 피스톤 벽은 axis('x' → x = L 쪽, 'y' → y = 0 쪽이 아니라 L 쪽)에 있다. */
+const Gas = (() => {
+  function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  function create(o) {
+    const R = rng(o.seed || 7), g = { n: o.n, r: o.r, W: o.W, H: o.H, axis: o.axis || 'x', L: o.L, v: o.v, uniform: !!o.uniform, p: [], hits: [], t: 0, flashes: [] };
+    const lenX = () => g.axis === 'x' ? g.L : g.W, lenY = () => g.axis === 'x' ? g.H : g.L;
+    for (let i = 0, tries = 0; i < g.n && tries < 5000; tries++) {
+      const x = g.r + R() * (lenX() - 2 * g.r), y = g.r + R() * (lenY() - 2 * g.r);
+      if (g.p.some(q => (q.x - x) ** 2 + (q.y - y) ** 2 < (2.2 * g.r) ** 2)) continue;
+      const a = R() * Math.PI * 2; g.p.push({ x, y, vx: Math.cos(a) * g.v, vy: Math.sin(a) * g.v }); i++;
+    }
+    return g;
+  }
+  /* 피스톤 위치(L) 바꾸기: 밖으로 나간 입자는 안으로 들이고 피스톤 쪽으로 가던 속도는 되돌린다(속력은 그대로 — 온도 일정) */
+  function setL(g, L) {
+    g.L = L;
+    for (const q of g.p) {
+      if (g.axis === 'x') { if (q.x > L - g.r) { q.x = Math.max(g.r, L - g.r - 1e-3); if (q.vx > 0) q.vx = -q.vx; } }
+      else if (q.y > L - g.r) { q.y = Math.max(g.r, L - g.r - 1e-3); if (q.vy > 0) q.vy = -q.vy; }
+    }
+  }
+  /* 모든 입자의 빠르기를 g.v로 맞춘다(방향은 그대로) */
+  function equalize(g) { for (const q of g.p) { const s = Math.hypot(q.vx, q.vy); if (s > 1e-9) { q.vx *= g.v / s; q.vy *= g.v / s; } else { const a = (q.x * 7.13 + q.y * 3.7) % (Math.PI * 2); q.vx = Math.cos(a) * g.v; q.vy = Math.sin(a) * g.v; } } }
+  /* 빠르기를 v로(온도 변화). uniform이면 모든 입자를 바로 v로, 아니면 평균 빠르기를 조금씩 */
+  function setSpeed(g, v, k = 1) {
+    if (g.uniform) { g.v = v; equalize(g); return; }
+    const cur = Math.sqrt(g.p.reduce((a, q) => a + q.vx * q.vx + q.vy * q.vy, 0) / g.p.length) || v;
+    const f = 1 + (v / cur - 1) * k;
+    for (const q of g.p) { q.vx *= f; q.vy *= f; }
+    g.v = v;
+  }
+  function step(g, dt) {
+    const n = Math.max(1, Math.ceil(dt * 240)), h = dt / n, r = g.r, X = g.axis === 'x' ? g.L : g.W, Y = g.axis === 'x' ? g.H : g.L;
+    for (let s = 0; s < n; s++) {
+      g.t += h;
+      for (const q of g.p) {
+        q.x += q.vx * h; q.y += q.vy * h;
+        if (q.x < r) { q.x = 2 * r - q.x; q.vx = Math.abs(q.vx); }
+        if (q.x > X - r) { q.x = 2 * (X - r) - q.x; q.vx = -Math.abs(q.vx); if (g.axis === 'x') hit(g, q); }
+        if (q.y < r) { q.y = 2 * r - q.y; q.vy = Math.abs(q.vy); }
+        if (q.y > Y - r) { q.y = 2 * (Y - r) - q.y; q.vy = -Math.abs(q.vy); if (g.axis === 'y') hit(g, q); }
+      }
+      for (let i = 0; i < g.p.length; i++) for (let j = i + 1; j < g.p.length; j++) {        // 같은 질량 원판의 탄성 충돌
+        const a = g.p[i], b = g.p[j], dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy, m = 2 * r;
+        if (d2 >= m * m || d2 === 0) continue;
+        const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+        const ov = (m - d) / 2; a.x -= nx * ov; a.y -= ny * ov; b.x += nx * ov; b.y += ny * ov;
+        if (rel < 0) { a.vx += rel * nx; a.vy += rel * ny; b.vx -= rel * nx; b.vy -= rel * ny; }
+      }
+      if (g.uniform) equalize(g);                                    // 부딪혀도 빠르기는 온도가 정한 값 그대로
+    }
+    while (g.hits.length && g.hits[0] < g.t - 2) g.hits.shift();
+    g.flashes = g.flashes.filter(f => g.t - f.t < .3);
+  }
+  function hit(g, q) { g.hits.push(g.t); g.flashes.push({ t: g.t, at: g.axis === 'x' ? q.y : q.x }); }
+  const rate = g => g.hits.length / Math.min(2, Math.max(.5, g.t));    // 최근 2초 평균 (초당)
+  const speeds = g => g.p.map(q => Math.hypot(q.vx, q.vy));
+  return { create, setL, setSpeed, step, rate, speeds };
+})();
+
+/* ───────── 샤를 법칙 — 온도가 다른 물에 주사기 넣기 + 입자 모형 ───────── */
+const APP_VERSION = '2.0', APP_DATE = '2026-10-01';
+const { $, $$, el, icon, toast, announce, store } = SS;
+
+/* ── 과학 진실층: 압력이 일정할 때 같은 양의 기체 — 0 ℃에서 30.0 mL ── */
+const T0K = 273.15, V_ZERO = 30.0;
+const volOf = T => V_ZERO * (T0K + T) / T0K;          // 부피는 절대 온도에 비례(화면에는 식을 쓰지 않는다)
+const speedOf = T => Math.sqrt((T0K + T) / T0K);      // 입자의 평균 빠르기(0 ℃ = 1)
+const TAU = 1.2;                                      // 기체 온도가 물 온도를 따라가는 시간 상수(s) — 실제보다 빠르게
+const WATERS = [{ id: 'ice', name: '얼음물', T: 0 }, { id: 'cold', name: '찬물', T: 20 }, { id: 'warm', name: '미지근한 물', T: 40 }, { id: 'hot', name: '뜨거운 물', T: 70 }];
+/* ── 장면 좌표: 1 유닛 = 1 mm ── */
+const MM_PER_ML = 1.786, BX = [170, 262, 354, 446], BENCH = 282, B_TOP = 162, W_TOP = 194, TIP_IN = 279, LIFT = 122;
+const ZB = { x: 18, w: 66.75, bottom: 262, k: 2.5 };  // 입자 모형: 주사기 속을 2.5배로
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const f1 = v => v.toFixed(1);
+
+/* ── 상태 ── */
+let S = Object.assign({ w: 1, pred: null, predDone: false, predClosed: false }, store.get('s', {}));
+let recs = store.get('recs', []);
+let Tg = WATERS[S.w].T;                               // 기체 온도
+const car = { x: BX[S.w], tip: TIP_IN, move: null };
+const gas = Gas.create({ n: 18, r: 2.8, W: ZB.w, H: 0, axis: 'y', L: volOf(Tg) * MM_PER_ML * ZB.k, v: 70 * speedOf(Tg), seed: 5, uniform: true });   // 같은 온도 → 모든 입자가 같은 빠르기
+function save() { store.set('s', S); store.set('recs', recs); }
+const Vnow = () => volOf(Tg);
+const settled = () => !car.move && Tg === WATERS[S.w].T;
+
+/* ═════════ 장면 ═════════ */
+const svg = $('#scene');
+let pxu = 1.7;
+function buildStatic() {
+  const r = $('#gRail');
+  el('rect', { x: -10, y: BENCH, width: 540, height: 30, class: 'bench' }, r);
+  el('rect', { x: -10, y: BENCH, width: 540, height: 1.2, class: 'bench-edge' }, r);
+  for (const x of [112, 506]) { el('rect', { x: x - 4, y: 16, width: 8, height: BENCH - 16, rx: 2, class: 'stand' }, r); el('rect', { x: x - 20, y: BENCH - 8, width: 40, height: 8, rx: 2, class: 'stand' }, r); }
+  el('rect', { x: 104, y: 16, width: 410, height: 7, rx: 3, class: 'rail' }, r);
+  const back = $('#gBeakBack'), front = $('#gBeakFront');
+  WATERS.forEach((w, i) => {
+    const x = BX[i];
+    el('path', { d: `M${x - 43} ${B_TOP}h86v116a4 4 0 0 1 -4 4h-78a4 4 0 0 1 -4 -4Z`, class: 'beaker' }, back);
+    const f = el('g', {}, front);
+    el('rect', { x: x - 41, y: W_TOP, width: 82, height: BENCH - 3 - W_TOP, class: 'water' }, f);   // 물은 주사기 앞에(잠긴 부분이 물 뒤로 보이게)
+    el('line', { x1: x - 41, y1: W_TOP, x2: x + 41, y2: W_TOP, class: 'water-top' }, f);
+    if (w.id === 'ice') [[-30, 5], [-12, -8], [12, 20]].forEach(([dx, rot]) => el('rect', { x: x + dx, y: W_TOP - 5, width: 11, height: 10, rx: 1.5, class: 'ice', transform: `rotate(${rot} ${x + dx + 5.5} ${W_TOP})` }, f));
+    for (let k = 1; k <= 4; k++) el('line', { x1: x - 41, y1: BENCH - 3 - k * 18.9, x2: x - 33, y2: BENCH - 3 - k * 18.9, class: 'b-mark' }, f);
+    el('path', { d: `M${x - 43} ${B_TOP}l-5 -4h8`, class: 'beaker' }, f);                      // 부리
+    el('rect', { x: x + 33, y: 150, width: 4, height: 126, rx: 2, class: 'therm' }, f);          // 알코올 온도계
+    el('circle', { cx: x + 35, cy: 276, r: 3.4, class: 'therm-liq' }, f);
+    el('rect', { x: x + 34.2, y: 266 - w.T * .9, width: 1.6, height: 10 + w.T * .9, class: 'therm-liq' }, f);
+    el('text', { x, y: 298, class: 'b-lbl cap-long' }, f).textContent = `${w.name} ${w.T} ℃`;
+    el('text', { x, y: 298, class: 'b-lbl cap-short' }, f).textContent = `${w.T} ℃`;
+    el('rect', { id: `sel${i}`, x: x - 47, y: B_TOP - 8, width: 94, height: BENCH - B_TOP + 10, rx: 6, class: 'b-sel' }, f);
+    const h = el('rect', { x: x - 47, y: 140, width: 94, height: 166, class: 'b-hit', 'data-noexport': '' }, f); h.dataset.w = i;
+  });
+  el('text', { x: ZB.x, y: ZB.bottom + 16, class: 'cap-s' }, $('#gBox')).textContent = '입자 모형(2.5배)';
+  el('text', { x: ZB.x, y: ZB.bottom + 30, class: 'cap-s cap-long' }, $('#gBox')).textContent = '크기·개수는 실제와 달라요';
+}
+function render() {
+  const V = Vnow(), cx = car.x, tip = car.tip, y0 = tip - 16, yg = y0 - V * MM_PER_ML, s = $('#gSyr');
+  s.innerHTML = '';
+  el('rect', { x: cx + 25, y: 20, width: 5, height: y0 - 93 - 20, class: 'rod' }, s);          // 걸이 막대(가로 막대에서)
+  el('rect', { x: cx + 13, y: y0 - 96, width: 17, height: 6, rx: 1.5, class: 'clamp' }, s);
+  el('rect', { x: cx - 15, y: y0 - 100, width: 30, height: 100, rx: 1.5, class: 'barrel' }, s);
+  el('rect', { x: cx - 13.35, y: yg, width: 26.7, height: y0 - yg, class: 'gas' }, s);
+  el('path', { d: `M${cx - 15} ${y0}L${cx - 3} ${tip - 14}H${cx + 3}L${cx + 15} ${y0}Z`, class: 'barrel' }, s);
+  el('rect', { x: cx - 3, y: tip - 14, width: 6, height: 6, class: 'barrel' }, s);
+  el('rect', { x: cx - 5, y: tip - 8, width: 10, height: 8, rx: 2, class: 'caprub' }, s);
+  el('rect', { x: cx - 24, y: y0 - 103, width: 48, height: 3, rx: 1, class: 'flange' }, s);
+  el('rect', { x: cx - 19, y: y0 - 96, width: 38, height: 5, rx: 1.5, class: 'clamp' }, s);
+  for (let ml = 0; ml <= 50; ml++) {
+    const y = y0 - ml * MM_PER_ML, maj = ml % 10 === 0, mid = ml % 5 === 0;
+    el('line', { x1: cx - 15, y1: y, x2: cx - 15 + (maj ? 6 : mid ? 4.5 : 3), y2: y, class: `grad${maj ? ' maj' : mid ? ' mid' : ''}` }, s);
+    if (maj && pxu >= 1.2) el('text', { x: cx - 17, y, class: 'grad-t' }, s).textContent = ml;
+  }
+  el('rect', { x: cx - 13.35, y: yg - 8, width: 26.7, height: 8, rx: 1, class: 'rubber' }, s);
+  el('rect', { x: cx - 3, y: yg - 8 - 70, width: 6, height: 70, class: 'rod' }, s);
+  el('rect', { x: cx - 12, y: yg - 82, width: 24, height: 4, rx: 1.5, class: 'rod' }, s);
+  el('text', { x: cx, y: yg - 88, class: 'vol-t mid' }, s).textContent = `${f1(V)} mL`;
+  // 선택 표시
+  WATERS.forEach((_, i) => { $(`#sel${i}`).style.display = i === S.w && !car.move ? '' : 'none'; });
+  // 입자 모형 상자
+  const L = V * MM_PER_ML * ZB.k, top = ZB.bottom - L, b = $('#gBox');
+  $$('.zb', b).forEach(e => e.remove());
+  el('rect', { x: ZB.x, y: top, width: ZB.w, height: L, class: 'box zb' }, b);
+  el('rect', { x: ZB.x - 2, y: top - 9, width: ZB.w + 4, height: 9, rx: 2, class: 'rubber zb' }, b);
+  el('rect', { x: ZB.x + ZB.w / 2 - 5, y: top - 29, width: 10, height: 20, class: 'rod zb' }, b);
+  const c = $('#gCall'); c.innerHTML = '';
+  el('path', { d: `M${cx - 13.35} ${yg}L${ZB.x + ZB.w} ${top}M${cx - 13.35} ${y0}L${ZB.x + ZB.w} ${ZB.bottom}`, class: 'call' }, c);
+  renderParts();
+}
+function renderParts() {
+  const g = $('#gParts'), L = gas.L, top = ZB.bottom - L;
+  if (g.childElementCount !== gas.p.length * 2) { g.innerHTML = ''; gas.p.forEach(() => { el('line', { class: 'streak' }, g); el('circle', { r: gas.r, class: 'pt' }, g); }); }
+  const ch = g.children;
+  gas.p.forEach((q, i) => {
+    const x = ZB.x + q.x, y = ZB.bottom - q.y;                  // 상자 좌표 y는 바닥에서 위로
+    const ln = ch[i * 2], c = ch[i * 2 + 1];
+    ln.setAttribute('x1', (x - q.vx * .09).toFixed(1)); ln.setAttribute('y1', (y + q.vy * .09).toFixed(1)); ln.setAttribute('x2', x.toFixed(1)); ln.setAttribute('y2', y.toFixed(1));
+    c.setAttribute('cx', x.toFixed(2)); c.setAttribute('cy', y.toFixed(2));
+  });
+}
+
+/* ═════════ 칸 ═════════ */
+function syncPanel() {
+  const V = Vnow(), ok = settled(), W = WATERS[S.w];
+  $('#tV').textContent = W.T; $('#vV').textContent = f1(V);
+  const sp = speedOf(Tg); $('#spV').textContent = sp.toFixed(2); $('#spBar').style.width = `${clamp((sp - .9) / .3, 0, 1) * 100}%`;
+  $$('#wChips button').forEach((b, i) => { b.setAttribute('aria-pressed', String(i === S.w)); b.setAttribute('aria-disabled', String(!!car.move)); });
+  const rb = $('#recBtn'); rb.setAttribute('aria-disabled', String(!ok));
+  $('#rHint').textContent = car.move ? '주사기를 옮기는 중이에요.' : !ok ? '부피가 더 변하지 않으면 기록할 수 있어요.' : recs.some(r => r.T === W.T) ? `${W.T} ℃는 이미 기록했어요. 다른 물로 옮겨 볼까요?` : '부피가 멈췄어요. 눈금을 읽어 기록해요.';
+}
+const PRED = { up: '피스톤이 올라가요', same: '그대로예요', down: '피스톤이 내려가요' };
+function renderPred() {
+  const p = $('#pred');
+  if (S.pred === 'skip' || S.predClosed) { p.innerHTML = ''; return; }
+  if (!S.pred) { p.innerHTML = `<p class="q">예측해 볼까요? 찬물(20 ℃)에 있는 주사기를 뜨거운 물(70 ℃)로 옮기면…</p><div class="row">${Object.entries(PRED).map(([k, t]) => `<button class="chip" data-pred="${k}">${t}</button>`).join('')}<button class="btn small ghost" data-pred="skip">건너뛰기</button></div>`; return; }
+  if (!S.predDone) { p.innerHTML = `<p class="res">내 예측: <b>${PRED[S.pred]}</b> — 뜨거운 물을 눌러 확인해 보세요.</p>`; return; }
+  p.innerHTML = `<p class="res">내 예측: <b>${PRED[S.pred]}</b> · 결과: 피스톤이 <b>올라갔어요</b> (${f1(volOf(20))} → ${f1(volOf(70))} mL)</p><div class="row"><button class="btn small ghost" data-pred="close">닫기</button></div>`;
+}
+function checkPred() { if (S.pred && S.pred !== 'skip' && !S.predDone && WATERS[S.w].T === 70 && settled()) { S.predDone = true; save(); renderPred(); announce('피스톤이 올라가 부피가 커졌어요'); } }
+function moveTo(i) {
+  if (car.move || i === S.w) return;
+  car.move = { from: car.x, to: BX[i], t: 0, i }; S.w = i; save(); syncPanel();
+  announce(`${WATERS[i].name} ${WATERS[i].T}도로 옮겨요`);
+}
+function record() {
+  if (!settled()) { toast('부피가 더 변하지 않으면 기록할 수 있어요.'); return; }
+  const T = WATERS[S.w].T, V = +f1(Vnow());
+  recs = recs.filter(r => r.T !== T); recs.push({ T, V }); save();
+  renderTable(T); renderGraph(); syncPanel();
+  announce(`${T}도, ${f1(V)} 밀리리터 기록`);
+}
+function renderTable(fresh) {
+  const rows = [...recs].sort((a, b) => a.T - b.T);
+  $('#recBody').innerHTML = rows.length ? rows.map(r => `<tr class="${r.T === fresh ? 'fresh' : ''}"><td>${r.T}</td><td>${f1(r.V)}</td></tr>`).join('') : '<tr class="empty-row"><td colspan="2">물을 바꾸고 부피가 멈추면 <b>기록하기</b>를 눌러요.</td></tr>';
+  $('#undoBtn').disabled = !recs.length;
+}
+function renderGraph() {
+  const g = $('#graph'); g.innerHTML = '';
+  const X0 = 44, X1 = 346, Y0 = 200, Y1 = 14, xs = t => X0 + t / 80 * (X1 - X0), ys = v => Y0 - v / 40 * (Y0 - Y1);
+  for (let v = 0; v <= 40; v += 10) { el('line', { x1: X0, y1: ys(v), x2: X1, y2: ys(v), class: 'g-grid' }, g); el('text', { x: X0 - 8, y: ys(v) + 4, class: 'g-t', 'text-anchor': 'end' }, g).textContent = v; }
+  for (let t = 0; t <= 80; t += 20) el('text', { x: xs(t), y: Y0 + 17, class: 'g-t', 'text-anchor': 'middle' }, g).textContent = t;
+  el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0, class: 'g-axis' }, g); el('line', { x1: X0, y1: Y0, x2: X0, y2: Y1 - 4, class: 'g-axis' }, g);
+  el('text', { x: X1, y: Y0 + 33, class: 'g-title', 'text-anchor': 'end' }, g).textContent = '물 온도 (℃)';
+  el('text', { x: 6, y: 10, class: 'g-title' }, g).textContent = '기체의 부피 (mL)';
+  if (recs.length >= 2) {
+    const n = recs.length, mx = recs.reduce((a, r) => a + r.T, 0) / n, my = recs.reduce((a, r) => a + r.V, 0) / n;
+    const sl = recs.reduce((a, r) => a + (r.T - mx) * (r.V - my), 0) / (recs.reduce((a, r) => a + (r.T - mx) ** 2, 0) || 1), b0 = my - sl * mx;
+    el('line', { x1: xs(0), y1: ys(b0), x2: xs(80), y2: ys(b0 + sl * 80), class: 'g-fit' }, g);
+  }
+  recs.forEach(r => el('circle', { cx: xs(r.T), cy: ys(r.V), r: 5, class: 'g-pt' }, g));
+  if (settled()) el('circle', { cx: xs(WATERS[S.w].T), cy: ys(Vnow()), r: 8, class: 'g-now' }, g);
+  const f = $('#find'), rows = [...recs].sort((a, b) => a.T - b.T);
+  if (rows.length >= 2) { const a = rows[0], z = rows[rows.length - 1]; f.textContent = `물 온도가 ${a.T} → ${z.T} ℃로 높아지자 기체의 부피가 ${f1(a.V)} → ${f1(z.V)} mL로 ${z.V > a.V ? '늘어났어요' : '줄었어요'}.${rows.length >= 3 ? ' 온도가 높을수록 부피가 커지는 직선 모양이에요.' : ''}`; }
+  else f.textContent = '두 가지 이상의 물에서 기록해 부피를 비교해 보세요.';
+}
+
+/* ═════════ 루프 ═════════ */
+let wasSettled = true, panelT = 0;
+function step(dt) {
+  if (car.move) {                                       // 들어 올림 → 옮김 → 내림 (1.2 s)
+    const m = car.move; m.t += dt;
+    const t1 = .35, t2 = .85, t3 = 1.2, e = u => u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    if (m.t < t1) car.tip = TIP_IN - LIFT * e(m.t / t1);
+    else if (m.t < t2) { car.tip = TIP_IN - LIFT; car.x = m.from + (m.to - m.from) * e((m.t - t1) / (t2 - t1)); }
+    else if (m.t < t3) { car.x = m.to; car.tip = TIP_IN - LIFT * (1 - e((m.t - t2) / (t3 - t2))); }
+    else { car.x = m.to; car.tip = TIP_IN; car.move = null; }
+  } else Tg += (WATERS[S.w].T - Tg) * (1 - Math.exp(-dt / TAU));
+  if (!car.move && Math.abs(Tg - WATERS[S.w].T) < .4) Tg = WATERS[S.w].T;   // 0.4 ℃ 안이면 부피 차가 0.05 mL보다 작아 눈금으로 구별되지 않는다
+  Gas.setL(gas, Vnow() * MM_PER_ML * ZB.k); Gas.setSpeed(gas, 70 * speedOf(Tg)); Gas.step(gas, dt);
+  render();
+  panelT += dt; if (panelT > .1) { panelT = 0; syncPanel(); }
+  const s = settled(); if (s !== wasSettled) { wasSettled = s; syncPanel(); renderGraph(); checkPred(); }
+}
+
+/* ═════════ 원리 카드 · 도움말 ═════════ */
+function theory() {
+  const r = [...recs].sort((a, b) => a.T - b.T);
+  return `<article class="tcard"><h3>온도가 높아지면 부피가 커져요</h3>
+    <figure><svg viewBox="0 0 300 120" role="img" aria-label="낮은 온도와 높은 온도의 입자 모형 — 온도가 높으면 입자가 빨라지고 피스톤이 올라간다">
+      <rect width="300" height="120" style="fill:var(--stage)"/>
+      <rect x="40" y="52" width="80" height="58" style="fill:var(--box);stroke:var(--box-edge)"/><rect x="38" y="44" width="84" height="8" style="fill:var(--rub)"/>
+      <rect x="180" y="30" width="80" height="80" style="fill:var(--box);stroke:var(--box-edge)"/><rect x="178" y="22" width="84" height="8" style="fill:var(--rub)"/>
+      ${[[55, 70], [80, 95], [100, 68], [70, 88], [105, 95]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" style="fill:var(--pt)"/><path d="M${x} ${y}l-6 4" style="stroke:var(--pt);stroke-width:2;opacity:.4"/>`).join('')}
+      ${[[195, 50], [225, 90], [245, 45], [205, 80], [240, 70]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" style="fill:var(--pt)"/><path d="M${x} ${y}l-16 9" style="stroke:var(--pt);stroke-width:2;opacity:.4"/>`).join('')}
+      <text x="80" y="36" style="fill:var(--text-1);font:700 12px var(--font-ui);text-anchor:middle">낮은 온도</text><text x="220" y="16" style="fill:var(--text-1);font:700 12px var(--font-ui);text-anchor:middle">높은 온도</text>
+    </svg></figure>
+    <p class="def">압력이 일정할 때 기체의 온도가 높아지면 부피가 커지고, 온도가 낮아지면 부피가 작아져요.</p>
+    <p>같은 온도에서는 입자들이 같은 빠르기로 움직여요. 온도가 높아지면 입자의 수와 크기는 그대로이지만 모든 입자의 운동이 함께 빨라져요. 빨라진 입자가 피스톤에 더 세게 부딪혀 피스톤을 밀어 올리고, 부피가 커져요.</p>
+    <p class="link">${r.length >= 2 ? `내 기록: ${r.map(x => `${x.T} ℃ ${f1(x.V)} mL`).join(', ')}.` : '물을 바꿔 가며 두 번 이상 기록해 보세요.'}</p></article>
+  <article class="tcard"><h3>생활 속에서</h3>
+    <p class="def">온도에 따라 기체의 부피가 변하는 예가 많아요.</p>
+    <p>찌그러진 탁구공을 뜨거운 물에 넣으면 펴져요. 열기구는 풍선 속 공기를 데워 부피를 키워요. 부푼 풍선을 차가운 곳에 두면 작아져요.</p></article>`;
+}
+const HELP = {
+  how: `<ol><li>장면의 <b>비커</b>나 왼쪽 칸의 물 단추를 누르면 끝을 막은 주사기가 그 물로 옮겨 가요.</li>
+    <li>기체의 온도가 물 온도를 따라가며 피스톤이 움직여요. 부피가 더 변하지 않으면 <b>기록하기</b>.</li>
+    <li>네 가지 물에서 모두 기록하고 그래프를 보세요. 왼쪽 <b>입자 모형</b>에서 입자의 빠르기(꼬리 길이)와 피스톤 높이를 비교해요.</li></ol>`,
+  model: `<ul><li>끝을 막은 50 mL 주사기에 0 ℃에서 30.0 mL가 되는 양의 공기가 들어 있어요. 피스톤은 마찰 없이 움직여 기체의 압력은 바깥 공기와 같게 일정하다고 보았어요.</li>
+    <li>부피는 기체의 온도에 따라 모형으로 계산했어요(20 ℃ 32.2 mL, 40 ℃ 34.4 mL, 70 ℃ 37.7 mL). 주사기 눈금은 0.1 mL까지 어림해 읽어요.</li>
+    <li>실제로는 기체 온도가 물 온도와 같아지는 데 시간이 더 걸려요. 체험을 위해 몇 초 만에 따라가도록 빠르게 했고, 옮기는 동안의 온도 변화는 넣지 않았어요.</li>
+    <li>입자 모형은 주사기 속을 2.5배로 키워 그렸고, 입자의 크기·개수·빠르기는 실제와 달라요. 같은 온도에서는 모든 입자가 같은 빠르기로 움직이도록 단순화했고(서로 부딪혀도 방향만 바뀜), 빠르기는 0 ℃일 때를 1로 나타냈어요. 꼬리 길이가 빠르기예요.</li>
+    <li>뜨거운 물(70 ℃)은 화상에 주의해요. 2022 개정 교육과정에 따라 수식 계산 없이 실험 결과와 입자 모형으로 해석해요.</li></ul>`,
+  source: '<p>2022 개정 중학교 과학 ‘기체의 성질’ — [9과06-03] 기체의 온도와 부피 관계를 실험 결과로부터 알아내고, 이를 입자 모형으로 해석할 수 있다. 이전 판(샤를의 법칙 인포그래픽)을 주사기 실험으로 다시 만들었어요(0 ℃ 부피의 1/273씩 늘어나는 식 등 정량 내용은 고등학교로 넘김).</p>',
+  wipe: '기록표, 그래프, 예측, 주사기 위치',
+};
+
+/* ═════════ 이벤트 · 시작 ═════════ */
+function capture() {
+  const W = WATERS[S.w], rows = [...recs].sort((a, b) => a.T - b.T);
+  return { svg, flashEl: $('#stage'),
+    cond: `끝을 막은 주사기 · 압력 일정 · 넣은 물: ${W.name} ${W.T} ℃`,
+    state: `기체의 부피 ${f1(Vnow())} mL${settled() ? '' : '(변하는 중)'} · 입자의 빠르기 ${speedOf(Tg).toFixed(2)}(0 ℃ = 1)${rows.length ? ` · 기록: ${rows.map(r => `${r.T} ℃ ${f1(r.V)} mL`).join(', ')}` : ''}` };
+}
+function sizeText() {
+  const r = svg.getBoundingClientRect(); if (!r.width) return;
+  pxu = Math.min(r.width / 520, r.height / 300);
+  for (const n of [12, 13, 15]) svg.style.setProperty(`--t${n}`, `${(n / pxu).toFixed(2)}px`);
+  svg.style.setProperty('--h3', `${(3 / pxu).toFixed(3)}px`);
+  svg.classList.toggle('small', pxu < 1.2);
+  render();
+}
+function bind() {
+  $('#wChips').innerHTML = WATERS.map((w, i) => `<button data-w="${i}" aria-pressed="false"><b>${w.T} ℃</b>${w.name}</button>`).join('');
+  $('#recBtn').innerHTML = `${icon('record')}기록하기`;
+  $('#undoBtn').innerHTML = `${icon('undo')}마지막 기록 지우기`;
+  $('#wChips').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) moveTo(+b.dataset.w); });
+  svg.addEventListener('click', e => { const h = e.target.closest('[data-w]'); if (h) moveTo(+h.dataset.w); });
+  $('#recBtn').onclick = record;
+  $('#undoBtn').onclick = () => { if (!recs.length) return; recs.pop(); save(); renderTable(); renderGraph(); syncPanel(); announce('마지막 기록을 지웠어요.'); };
+  $('#pred').addEventListener('click', e => { const b = e.target.closest('[data-pred]'); if (!b) return; const k = b.dataset.pred; if (k === 'close') S.predClosed = true; else S.pred = k; save(); renderPred(); checkPred(); });
+}
+buildStatic(); bind();
+SS.init({
+  id: 'charles-lab', title: '샤를 법칙 — 기체의 온도와 부피', file: '샤를법칙_온도와부피', version: APP_VERSION, date: APP_DATE,
+  help: HELP, theory, capture, onResize: sizeText,
+  onWipe: () => { S = { w: 1, pred: null, predDone: false, predClosed: false }; recs = []; car.x = BX[1]; car.tip = TIP_IN; car.move = null; Tg = 20; renderPred(); renderTable(); renderGraph(); syncPanel(); },
+});
+renderPred(); renderTable(); sizeText(); renderGraph(); syncPanel();
+SS.loop(step);
+window.CharlesLab = { moveTo, record, step, gas, state: () => ({ S, recs, Tg, V: Vnow(), settled: settled() }) };
+
+</script>
 </body>
 </html>

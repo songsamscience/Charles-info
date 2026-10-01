@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
-<meta name="version" content="2.0">
-<meta name="description" content="끝을 막은 주사기를 온도가 다른 물에 넣어 피스톤이 움직이는 모습과 부피를 재고, 확대한 입자 모형에서 온도가 높아지면 입자가 빨라져 부피가 커지는 까닭을 찾는 중학교 과학 가상실험실">
+<meta name="version" content="2.1">
+<meta name="description" content="끝을 막은 주사기를 온도가 다른 물에 넣어 부피를 재고, 확대한 입자 모형과 입자 모형 정리표로 온도가 높아지면 입자가 빨라져 부피가 커지는 까닭을 찾는 중학교 과학 가상실험실">
 <meta property="og:title" content="송쌤과학 가상실험실 | 샤를 법칙 — 기체의 온도와 부피">
 <meta property="og:description" content="주사기를 뜨거운 물에 넣으면 피스톤은 어떻게 될까요? 부피를 재고 입자 모형으로 확인해요">
 <meta property="og:type" content="website">
@@ -204,6 +204,9 @@ dialog::backdrop{background:var(--scrim)}
 .tcard .def{font:700 15px/1.6 var(--font-ui);margin-bottom:6px}
 .tcard p{font-size:15px;line-height:1.7;color:var(--text-1)}
 .tcard p+p{margin-top:6px}
+.tcard .tb-list{margin:4px 0 0;padding:0 0 0 18px;display:grid;gap:5px}
+.tcard .tb-list li{font-size:14px;line-height:1.6;color:var(--text-1)}
+.tcard .tb-list b{font-weight:800}
 .tcard .link{margin-top:10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-1) var(--r-1) 0;font-size:15px;line-height:1.65}
 .toast{position:fixed;left:50%;bottom:calc(20px + var(--strip-h) + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;max-width:min(360px,calc(100vw - 24px));padding:10px 14px;border-radius:var(--r-2);background:var(--surface-1);border:1px solid var(--line-2);box-shadow:var(--edge-hi),var(--shadow-2);font:500 13px/1.5 var(--font-ui);color:var(--text-1)}
 .toast.error{border-color:var(--danger)}
@@ -231,6 +234,30 @@ dialog::backdrop{background:var(--scrim)}
 @media (max-width:360px){.icon-btn{width:38px}.utilities{gap:0}}
 
 /* ═══════ 이 실험실 ═══════ */
+/* 입자 모형 정리표 (보일·샤를 공용) */
+.mc{display:flex;flex-direction:column;gap:10px}
+.mc-q{font:700 15px/1.5 var(--font-ui);color:var(--text-1)}
+.mc-go{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.mc-go .lbl{margin-right:2px}
+.mc-rows{display:grid;gap:6px}
+.mc-row{display:grid;grid-template-columns:minmax(96px,auto) minmax(0,1fr) 22px;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--line-1);border-radius:var(--r-2)}
+.mc-row.ok{border-color:var(--ok);background:var(--ok-soft)}
+.mc-row.no{border-color:var(--warn);background:var(--warn-soft)}
+.mc-n{font:700 13px/1.3 var(--font-ui);color:var(--text-1)}
+.mc-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.mc-opts button{min-height:34px;padding:0 4px;border:1px solid var(--line-2);border-radius:var(--r-1);background:var(--surface-1);color:var(--text-1);font:600 13px/1.2 var(--font-ui);cursor:pointer;white-space:nowrap}
+.mc-opts button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:800}
+.mc-mk{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font:800 13px/1 var(--font-ui);color:var(--warn)}
+.mc-row.ok .mc-mk{background:var(--ok);color:var(--surface-1)}
+.mc-mk svg{width:13px;height:13px;stroke-width:2.6}
+.mc-tip{grid-column:1 / -1;font:500 13px/1.5 var(--font-ui);color:var(--text-1)}
+.mc-act{display:flex;align-items:center;gap:8px}
+.mc-act .btn.primary{min-height:42px;padding:0 18px}
+.mc-fb{font:500 14px/1.6 var(--font-ui);color:var(--text-1)}
+.mc-fb b{font-weight:800}
+@media (hover:hover) and (pointer:fine){.mc-opts button:not([aria-pressed="true"]):hover{border-color:var(--text-2)}}
+@media (max-width:600px){.mc-row{grid-template-columns:minmax(0,1fr) 22px}.mc-opts{grid-column:1 / -1;grid-row:2}}
+
 /* 샤를 법칙 — 왼쪽 조건·계기·기록 칸 │ 오른쪽 작업대 장면(비커 넷 + 옮겨 가는 주사기 + 입자 모형) */
 :root[data-theme="dark"]{
   --glass-hi:#e9f4fb;--glass:#9fc3d826;--glass-lo:#6d8ea3;--glass-edge:#8fb0c4;--grad-ink:#dbe6ef;
@@ -391,6 +418,10 @@ table.rec tr.fresh td{animation:fresh .9s var(--ease-out)}
         <svg id="graph" viewBox="0 0 360 240" role="img" aria-label="물 온도와 기체 부피의 그래프"></svg>
         <p class="find note-slot" id="find"></p>
         <table class="rec"><thead><tr><th scope="col">물 온도 (℃)</th><th scope="col">기체의 부피 (mL)</th></tr></thead><tbody id="recBody"></tbody></table>
+      </div>
+      <div class="blk" id="mcBlk">
+        <h3 class="cap">입자 모형 정리</h3>
+        <div class="mc" id="mcBox"></div>
       </div>
     </div>
   </section>
@@ -791,8 +822,58 @@ const Gas = (() => {
   return { create, setL, setSpeed, step, rate, speeds };
 })();
 
+/* ───────── 입자 모형 정리표 (보일·샤를 공용) ─────────
+   천재 교과서 200·210쪽 ‘입자 모형으로 해석하기’ 활동처럼 (가)→(나)에서
+   입자의 크기·개수·운동 빠르기·충돌이 어떻게 되는지 고르고, 장면의 입자 모형으로 확인한다.
+   ModelCheck.create({ mount, key, question, states:[{id,label}], current(), go(id), rows:[{id,name,opts,ans,tip}], summary }) */
+const ModelCheck = (() => {
+  const { icon, announce, store, toast } = SS;
+  function create(o) {
+    const key = o.key || 'mc', root = o.mount;
+    const fresh = () => ({ pick: {}, checked: false });
+    let st = Object.assign(fresh(), store.get(key, {}));
+    const save = () => store.set(key, st);
+    const nPicked = () => o.rows.filter(r => st.pick[r.id] != null).length;
+    function render() {
+      const res = st.checked ? o.rows.map(r => st.pick[r.id] === r.ans) : null, cur = o.current();
+      const allOk = res && res.every(Boolean);
+      root.innerHTML = `<p class="mc-q">${o.question}</p>
+        <div class="mc-go" role="group" aria-label="장면에서 두 상태 보기"><span class="lbl">장면에서 보기</span>${o.states.map(s => `<button class="chip" data-mcgo="${s.id}" aria-pressed="${cur === s.id}">${s.label}</button>`).join('')}</div>
+        <div class="mc-rows">${o.rows.map((r, i) => `<div class="mc-row${res ? (res[i] ? ' ok' : ' no') : ''}" role="group" aria-label="${r.name}">
+            <span class="mc-n">${r.name}</span>
+            <span class="mc-opts">${r.opts.map((t, j) => `<button data-mcr="${r.id}" data-j="${j}" aria-pressed="${st.pick[r.id] === j}">${t}</button>`).join('')}</span>
+            <span class="mc-mk" aria-hidden="true">${res ? (res[i] ? icon('check') : '?') : ''}</span>
+            ${res && !res[i] ? `<span class="mc-tip">${r.tip}</span>` : ''}
+          </div>`).join('')}</div>
+        <div class="mc-act"><button class="btn primary" data-mcact="check" aria-disabled="${nPicked() < o.rows.length}">${icon('check')}확인하기</button><button class="btn ghost small" data-mcact="reset">${icon('reset')}다시 고르기</button></div>
+        <p class="mc-fb" aria-live="polite">${allOk ? `<b>모두 맞았어요.</b> ${o.summary}` : res ? `${res.filter(Boolean).length}/${o.rows.length} 맞았어요. ? 표시한 줄은 장면의 입자 모형을 다시 볼까요?` : `${o.rows.length}줄을 모두 고르면 확인할 수 있어요. 위의 두 단추로 장면을 (가)·(나)로 바꿔 보며 골라요.`}</p>`;
+    }
+    function refocus(sel) { const b = root.querySelector(sel); if (b) b.focus(); }
+    root.addEventListener('click', e => {
+      const g = e.target.closest('[data-mcgo]');
+      if (g) { o.go(g.dataset.mcgo); render(); refocus(`[data-mcgo="${g.dataset.mcgo}"]`); return; }
+      const r = e.target.closest('[data-mcr]');
+      if (r) { st.pick[r.dataset.mcr] = +r.dataset.j; st.checked = false; save(); render(); refocus(`[data-mcr="${r.dataset.mcr}"][data-j="${r.dataset.j}"]`); return; }
+      const a = e.target.closest('[data-mcact]'); if (!a) return;
+      if (a.dataset.mcact === 'reset') { st = fresh(); save(); render(); refocus('[data-mcact="reset"]'); return; }
+      if (nPicked() < o.rows.length) { toast('모든 줄을 고른 뒤 확인해요.'); return; }
+      st.checked = true; save(); render(); refocus('[data-mcact="check"]');
+      const n = o.rows.filter(rr => st.pick[rr.id] === rr.ans).length;
+      announce(n === o.rows.length ? '모두 맞았어요' : `${o.rows.length}개 가운데 ${n}개 맞았어요`);
+    });
+    render();
+    let lastCur = o.current();
+    function sync() {   // 장면이 바뀌면 (가)·(나) 단추 표시만 고친다(포커스를 잃지 않게)
+      const c = o.current(); if (c === lastCur) return; lastCur = c;
+      root.querySelectorAll('[data-mcgo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mcgo === c)));
+    }
+    return { render, sync, state: () => st, ok: () => st.checked && o.rows.every(r => st.pick[r.id] === r.ans), wipe() { st = fresh(); save(); render(); } };
+  }
+  return { create };
+})();
+
 /* ───────── 샤를 법칙 — 온도가 다른 물에 주사기 넣기 + 입자 모형 ───────── */
-const APP_VERSION = '2.0', APP_DATE = '2026-10-01';
+const APP_VERSION = '2.1', APP_DATE = '2026-10-01';
 const { $, $$, el, icon, toast, announce, store } = SS;
 
 /* ── 과학 진실층: 압력이 일정할 때 같은 양의 기체 — 0 ℃에서 30.0 mL ── */
@@ -907,7 +988,7 @@ function renderPred() {
   if (S.pred === 'skip' || S.predClosed) { p.innerHTML = ''; return; }
   if (!S.pred) { p.innerHTML = `<p class="q">예측해 볼까요? 찬물(20 ℃)에 있는 주사기를 뜨거운 물(70 ℃)로 옮기면…</p><div class="row">${Object.entries(PRED).map(([k, t]) => `<button class="chip" data-pred="${k}">${t}</button>`).join('')}<button class="btn small ghost" data-pred="skip">건너뛰기</button></div>`; return; }
   if (!S.predDone) { p.innerHTML = `<p class="res">내 예측: <b>${PRED[S.pred]}</b> — 뜨거운 물을 눌러 확인해 보세요.</p>`; return; }
-  p.innerHTML = `<p class="res">내 예측: <b>${PRED[S.pred]}</b> · 결과: 피스톤이 <b>올라갔어요</b> (${f1(volOf(20))} → ${f1(volOf(70))} mL)</p><div class="row"><button class="btn small ghost" data-pred="close">닫기</button></div>`;
+  p.innerHTML = `<p class="res">내 예측: <b>${PRED[S.pred]}</b> · 결과: 피스톤이 <b>올라갔어요</b> (${f1(volOf(20))} → ${f1(volOf(70))} mL)</p><div class="row"><button class="btn small" data-tomc>입자 모형 정리하기</button><button class="btn small ghost" data-pred="close">닫기</button></div>`;
 }
 function checkPred() { if (S.pred && S.pred !== 'skip' && !S.predDone && WATERS[S.w].T === 70 && settled()) { S.predDone = true; save(); renderPred(); announce('피스톤이 올라가 부피가 커졌어요'); } }
 function moveTo(i) {
@@ -929,7 +1010,7 @@ function renderTable(fresh) {
 }
 function renderGraph() {
   const g = $('#graph'); g.innerHTML = '';
-  const X0 = 44, X1 = 346, Y0 = 200, Y1 = 14, xs = t => X0 + t / 80 * (X1 - X0), ys = v => Y0 - v / 40 * (Y0 - Y1);
+  const X0 = 44, X1 = 346, Y0 = 200, Y1 = 26, xs = t => X0 + t / 80 * (X1 - X0), ys = v => Y0 - v / 40 * (Y0 - Y1);
   for (let v = 0; v <= 40; v += 10) { el('line', { x1: X0, y1: ys(v), x2: X1, y2: ys(v), class: 'g-grid' }, g); el('text', { x: X0 - 8, y: ys(v) + 4, class: 'g-t', 'text-anchor': 'end' }, g).textContent = v; }
   for (let t = 0; t <= 80; t += 20) el('text', { x: xs(t), y: Y0 + 17, class: 'g-t', 'text-anchor': 'middle' }, g).textContent = t;
   el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0, class: 'g-axis' }, g); el('line', { x1: X0, y1: Y0, x2: X0, y2: Y1 - 4, class: 'g-axis' }, g);
@@ -978,23 +1059,32 @@ function theory() {
       <text x="80" y="36" style="fill:var(--text-1);font:700 12px var(--font-ui);text-anchor:middle">낮은 온도</text><text x="220" y="16" style="fill:var(--text-1);font:700 12px var(--font-ui);text-anchor:middle">높은 온도</text>
     </svg></figure>
     <p class="def">압력이 일정할 때 기체의 온도가 높아지면 부피가 커지고, 온도가 낮아지면 부피가 작아져요.</p>
-    <p>같은 온도에서는 입자들이 같은 빠르기로 움직여요. 온도가 높아지면 입자의 수와 크기는 그대로이지만 모든 입자의 운동이 함께 빨라져요. 빨라진 입자가 피스톤에 더 세게 부딪혀 피스톤을 밀어 올리고, 부피가 커져요.</p>
+    <p>같은 온도에서는 입자들이 같은 빠르기로 움직여요. 온도가 높아지면 입자의 수와 크기는 그대로이지만 모든 입자의 운동이 함께 빨라져요. 빨라진 입자가 벽에 충돌하는 세기가 커져 피스톤을 밀어 올리고, 부피가 일정하게 늘어나요. 이 관계는 1787년 무렵 열기구를 연구하던 샤를이 알아내 샤를 법칙이라고 해요.</p>
     <p class="link">${r.length >= 2 ? `내 기록: ${r.map(x => `${x.T} ℃ ${f1(x.V)} mL`).join(', ')}.` : '물을 바꿔 가며 두 번 이상 기록해 보세요.'}</p></article>
   <article class="tcard"><h3>생활 속에서</h3>
     <p class="def">온도에 따라 기체의 부피가 변하는 예가 많아요.</p>
-    <p>찌그러진 탁구공을 뜨거운 물에 넣으면 펴져요. 열기구는 풍선 속 공기를 데워 부피를 키워요. 부푼 풍선을 차가운 곳에 두면 작아져요.</p></article>`;
+    <p>찌그러진 탁구공을 뜨거운 물에 넣으면 펴지고, 여름에는 자전거 타이어가 팽팽해져요. 냉장고에서 꺼낸 우유갑 빨대로 우유가 흘러나오고, 뜨거운 음식을 담은 그릇이 식탁에서 저절로 움직이거나 씌운 비닐 랩이 부풀어요. 겨울 창고의 농구공, 냉장고 속 페트병은 찌그러지고, 열기구는 풍선 속 공기를 데워 떠올라요.</p></article>
+  <article class="tcard"><h3>교과서에서는</h3>
+    <p class="def">세 교과서 모두 온도가 다른 물에 기체가 든 용기를 넣어 부피 변화를 재고, 입자 모형으로 해석해요.</p>
+    <ul class="tb-list">
+      <li><b>천재</b> 208~213쪽 — 피펫을 꽂은 유리병을 약 60 ℃ 물에 넣고 50 ℃부터 2 ℃씩 식으며 눈금 읽기, 입자 모형 해석표(입자의 크기·개수·빠르기·충돌 세기)</li>
+      <li><b>동아</b> 199~203쪽 — 오줌싸개 인형, 글리세롤 방울을 넣은 빨대를 50 ℃부터 5 ℃씩 식히며 측정, 그릇 떼기·달걀 넣기 문제 해결</li>
+      <li><b>비상</b> 210~214쪽 — 스포이트 속 물방울 위치를 온도가 다른 물 4개에서 측정, 구리 통과 실린더, 입자 모형 그리기</li>
+    </ul>
+    <p class="link">이 실험실은 비상 교과서처럼 온도가 다른 물 4개를 쓰고, 아래 ‘입자 모형 정리’는 천재 교과서 210쪽의 해석표를 입자 모형으로 확인해요.</p></article>`;
 }
 const HELP = {
   how: `<ol><li>장면의 <b>비커</b>나 왼쪽 칸의 물 단추를 누르면 끝을 막은 주사기가 그 물로 옮겨 가요.</li>
     <li>기체의 온도가 물 온도를 따라가며 피스톤이 움직여요. 부피가 더 변하지 않으면 <b>기록하기</b>.</li>
-    <li>네 가지 물에서 모두 기록하고 그래프를 보세요. 왼쪽 <b>입자 모형</b>에서 입자의 빠르기(꼬리 길이)와 피스톤 높이를 비교해요.</li></ol>`,
+    <li>네 가지 물에서 모두 기록하고 그래프를 보세요. 왼쪽 <b>입자 모형</b>에서 입자의 빠르기(꼬리 길이)와 피스톤 높이를 비교해요.</li>
+    <li>칸 맨 아래 <b>입자 모형 정리</b>에서 (가) 뜨거운 물과 (나) 얼음물을 오가며 입자의 크기·개수·빠르기·충돌 세기·부피가 어떻게 되는지 고르고 확인해요.</li></ol>`,
   model: `<ul><li>끝을 막은 50 mL 주사기에 0 ℃에서 30.0 mL가 되는 양의 공기가 들어 있어요. 피스톤은 마찰 없이 움직여 기체의 압력은 바깥 공기와 같게 일정하다고 보았어요.</li>
     <li>부피는 기체의 온도에 따라 모형으로 계산했어요(20 ℃ 32.2 mL, 40 ℃ 34.4 mL, 70 ℃ 37.7 mL). 주사기 눈금은 0.1 mL까지 어림해 읽어요.</li>
     <li>실제로는 기체 온도가 물 온도와 같아지는 데 시간이 더 걸려요. 체험을 위해 몇 초 만에 따라가도록 빠르게 했고, 옮기는 동안의 온도 변화는 넣지 않았어요.</li>
     <li>입자 모형은 주사기 속을 2.5배로 키워 그렸고, 입자의 크기·개수·빠르기는 실제와 달라요. 같은 온도에서는 모든 입자가 같은 빠르기로 움직이도록 단순화했고(서로 부딪혀도 방향만 바뀜), 빠르기는 0 ℃일 때를 1로 나타냈어요. 꼬리 길이가 빠르기예요.</li>
     <li>뜨거운 물(70 ℃)은 화상에 주의해요. 2022 개정 교육과정에 따라 수식 계산 없이 실험 결과와 입자 모형으로 해석해요.</li></ul>`,
-  source: '<p>2022 개정 중학교 과학 ‘기체의 성질’ — [9과06-03] 기체의 온도와 부피 관계를 실험 결과로부터 알아내고, 이를 입자 모형으로 해석할 수 있다. 이전 판(샤를의 법칙 인포그래픽)을 주사기 실험으로 다시 만들었어요(0 ℃ 부피의 1/273씩 늘어나는 식 등 정량 내용은 고등학교로 넘김).</p>',
-  wipe: '기록표, 그래프, 예측, 주사기 위치',
+  source: '<p>2022 개정 중학교 과학 ‘기체의 성질’ — [9과06-03] 기체의 온도와 부피 관계를 실험 결과로부터 알아내고, 이를 입자 모형으로 해석할 수 있다. 이전 판(샤를의 법칙 인포그래픽)을 주사기 실험으로 다시 만들었어요(0 ℃ 부피의 1/273씩 늘어나는 식 등 정량 내용은 고등학교로 넘김).</p><p>교과서: 천재교육(임성숙) 중학교 과학 1 208~213쪽, 동아출판 199~203쪽, 비상교육 210~214쪽의 탐구, 입자 모형 해석표, 생활 속 예를 따랐어요. 그림은 새로 그렸어요.</p>',
+  wipe: '기록표, 그래프, 예측, 주사기 위치, 입자 모형 정리',
 };
 
 /* ═════════ 이벤트 · 시작 ═════════ */
@@ -1020,17 +1110,33 @@ function bind() {
   svg.addEventListener('click', e => { const h = e.target.closest('[data-w]'); if (h) moveTo(+h.dataset.w); });
   $('#recBtn').onclick = record;
   $('#undoBtn').onclick = () => { if (!recs.length) return; recs.pop(); save(); renderTable(); renderGraph(); syncPanel(); announce('마지막 기록을 지웠어요.'); };
-  $('#pred').addEventListener('click', e => { const b = e.target.closest('[data-pred]'); if (!b) return; const k = b.dataset.pred; if (k === 'close') S.predClosed = true; else S.pred = k; save(); renderPred(); checkPred(); });
+  $('#pred').addEventListener('click', e => { if (e.target.closest('[data-tomc]')) { $('#mcBlk').scrollIntoView({ behavior: SS.REDUCED ? 'auto' : 'smooth', block: 'start' }); return; } const b = e.target.closest('[data-pred]'); if (!b) return; const k = b.dataset.pred; if (k === 'close') S.predClosed = true; else S.pred = k; save(); renderPred(); checkPred(); });
 }
 buildStatic(); bind();
+/* ── 입자 모형 정리표 (천재 210~211쪽 ‘기체의 온도에 따른 부피 변화를 입자 모형으로 해석하기’) ── */
+const mc = ModelCheck.create({
+  mount: $('#mcBox'), key: 'mc',
+  question: '압력이 일정할 때 주사기를 (가) 뜨거운 물(70 ℃)에서 (나) 얼음물(0 ℃)로 옮겨 기체의 온도를 낮췄어요. (나)에서는 어떻게 될까요?',
+  states: [{ id: 'a', label: '(가) 뜨거운 물 70 ℃' }, { id: 'b', label: '(나) 얼음물 0 ℃' }],
+  current: () => settled() ? (S.w === 3 ? 'a' : S.w === 0 ? 'b' : null) : null,
+  go: id => moveTo(id === 'a' ? 3 : 0),
+  rows: [
+    { id: 'size', name: '입자의 크기', opts: ['커져요', '그대로', '작아져요'], ans: 1, tip: '입자 모형에서 공의 크기를 (가)와 (나)에서 비교해 보세요. 입자 하나하나는 변하지 않아요.' },
+    { id: 'count', name: '입자의 개수', opts: ['많아져요', '그대로', '적어져요'], ans: 1, tip: '주사기 끝이 막혀 있어 입자가 드나들 수 없어요. 모형의 입자 수를 세어 보세요.' },
+    { id: 'speed', name: '입자의 운동 빠르기', opts: ['빨라져요', '그대로', '느려져요'], ans: 2, tip: '‘입자의 빠르기’ 막대와 입자의 꼬리 길이를 (가)와 (나)에서 비교해 보세요.' },
+    { id: 'hit', name: '벽에 충돌하는 세기', opts: ['세져요', '그대로', '약해져요'], ans: 2, tip: '느리게 움직이는 입자가 피스톤에 부딪히면 피스톤을 미는 힘은 어떨까요?' },
+    { id: 'vol', name: '기체의 부피', opts: ['늘어요', '그대로', '줄어요'], ans: 2, tip: '주사기 눈금(기체의 부피)을 (가)와 (나)에서 비교해 보세요.' },
+  ],
+  summary: '일정한 압력에서 기체의 온도가 낮아지면 입자의 크기와 개수는 그대로이고, 입자의 운동이 느려져 벽에 충돌하는 세기가 약해져요. 그래서 기체의 부피가 줄어들어요. 온도가 높아지면 반대로 입자 운동이 빨라져 부피가 늘어나요.',
+});
 SS.init({
   id: 'charles-lab', title: '샤를 법칙 — 기체의 온도와 부피', file: '샤를법칙_온도와부피', version: APP_VERSION, date: APP_DATE,
   help: HELP, theory, capture, onResize: sizeText,
-  onWipe: () => { S = { w: 1, pred: null, predDone: false, predClosed: false }; recs = []; car.x = BX[1]; car.tip = TIP_IN; car.move = null; Tg = 20; renderPred(); renderTable(); renderGraph(); syncPanel(); },
+  onWipe: () => { mc.wipe(); S = { w: 1, pred: null, predDone: false, predClosed: false }; recs = []; car.x = BX[1]; car.tip = TIP_IN; car.move = null; Tg = 20; renderPred(); renderTable(); renderGraph(); syncPanel(); },
 });
 renderPred(); renderTable(); sizeText(); renderGraph(); syncPanel();
-SS.loop(step);
-window.CharlesLab = { moveTo, record, step, gas, state: () => ({ S, recs, Tg, V: Vnow(), settled: settled() }) };
+SS.loop(dt => { step(dt); mc.sync(); });
+window.CharlesLab = { mc, moveTo, moveTo, record, step, gas, state: () => ({ S, recs, Tg, V: Vnow(), settled: settled() }) };
 
 </script>
 </body>
